@@ -14,6 +14,7 @@ charset = utf-8
 
 [*.{sln,*proj}]
 charset = utf-8-bom
+indent_size = 2
 
 [*.{cs,cake}]
 indent_size = 4

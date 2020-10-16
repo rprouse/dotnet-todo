@@ -34,5 +34,14 @@ namespace Alteridem.Todo.Tests
             var task = new Task(line);
             Assert.That(task.Description, Is.EqualTo(description));
         }
+
+        [Test]
+        public void CanParseCompletedWithoutCompletionDate()
+        {
+            var task = new Task("x Test raw string");
+            Assert.That(task.Completed, Is.True);
+            Assert.That(task.CompletionDate, Is.Not.Null);
+            Assert.That(task.Description, Is.EqualTo("Test raw string"));
+        }
     }
 }

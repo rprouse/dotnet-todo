@@ -95,9 +95,12 @@ namespace Alteridem.Todo.Core
             else
             {
                 Completed = true;
-                string date = str.Substring(2);
-                if (!string.IsNullOrWhiteSpace(date))
-                    CompletionDate = DateTime.Parse(date);
+                if (str.Length > 2)
+                {
+                    string date = str.Substring(2);
+                    if (!string.IsNullOrWhiteSpace(date))
+                        CompletionDate = DateTime.Parse(date);
+                }
             }
             line = CompletedRegex.Replace(line, "").Trim();
 
@@ -132,6 +135,30 @@ namespace Alteridem.Todo.Core
             }
 
             Description = line;
+        }
+
+        public override string ToString()
+        {
+            // If completed hasn't changed, just return the line
+            bool prevComplete = Line.StartsWith("x ");
+            if(prevComplete == Completed)
+                return Line;
+
+            if(Completed)
+            {
+                return string.Format("x {0}{1}{2}",
+                    CompletionDate is null ? "" : CompletionDate.Value.ToString("yyyy-MM-dd") + " ",
+                    CreationDate is null ? "" : CreationDate.Value.ToString("yyyy-MM-dd") + " ",
+                    Description
+                );
+            }
+            else
+            {
+                return string.Format("{0}{1}{2}",
+                    Priority is null ? "" : $"({Priority}) ",
+                    CreationDate is null ? "" : CreationDate.Value.ToString("yyyy-MM-dd") + " ",
+                    Description);
+            }
         }
     }
 }

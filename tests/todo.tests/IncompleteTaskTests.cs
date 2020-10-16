@@ -50,6 +50,15 @@ namespace Alteridem.Todo.Tests
             Assert.That(task.Description, Is.EqualTo(description));
         }
 
+        // https://github.com/todotxt/todo.txt#additional-file-format-definitions
+        [TestCaseSource(nameof(AdditionalFileFormatDefinitionData))]
+        public void ParsesOutAdditionalFileFormatDefinitions(string line, IDictionary<string, string> specialTags)
+        {
+            var task = new Task(line);
+            Assert.That(task.SpecialTags, Is.EqualTo(specialTags));
+        }
+
+
         public static IEnumerable<TestCaseData> Rule3Data =>
             new[]
             {
@@ -67,6 +76,35 @@ namespace Alteridem.Todo.Tests
                    "Learn how to add 2+2",
                    new string[]{ },
                    new string[]{ }
+               ),
+            };
+
+        public static IEnumerable<TestCaseData> AdditionalFileFormatDefinitionData =>
+            new[]
+            {
+                new TestCaseData(
+                    "(A) Call Mom +Family +PeaceLoveAndHappiness @iphone @phone key:value due:2010-01-02",
+                    new Dictionary<string, string>
+                    {
+                        { "key", "value" },
+                        { "due", "2010-01-02" }
+                    }
+                ),
+               new TestCaseData(
+                   "Email SoAndSo at email:soandso@example.com or phone:(555)365-1234",
+                    new Dictionary<string, string>
+                    {
+                        { "email", "soandso@example.com" },
+                        { "phone", "(555)365-1234" }
+                    }
+               ),
+               new TestCaseData(
+                   "Don't take leading :colons",
+                   new Dictionary<string, string>()
+               ),
+               new TestCaseData(
+                   "Don't take trailing: colons either",
+                   new Dictionary<string, string>()
                ),
             };
     }

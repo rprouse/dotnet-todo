@@ -11,6 +11,7 @@ namespace Alteridem.Todo.Core
         private static readonly Regex DateRegex = new Regex(@"^(?<date>(\d{4})-(\d{2})-(\d{2}))", RegexOptions.Compiled);
         private static readonly Regex ProjectRegex = new Regex(@"(?<proj>(?<=^|\s)\+[^\s]+)", RegexOptions.Compiled);
         private static readonly Regex ContextRegex = new Regex(@"(?<context>(?<=^|\s)\@[^\s]+)", RegexOptions.Compiled);
+        private static readonly Regex SpecialTagRegex = new Regex(@"(?<tag>(?<=^|\s)[^\s:]+\:[^\s:]+)", RegexOptions.Compiled);
 
         private bool _completed;
 
@@ -121,6 +122,14 @@ namespace Alteridem.Todo.Core
             var contexts = ContextRegex.Matches(line);
             foreach (var context in contexts)
                 ContextTags.Add(context.ToString());
+
+            // Parse out special tags but don't strip them
+            var tags = SpecialTagRegex.Matches(line);
+            foreach(var pair in tags)
+            {
+                var split = pair.ToString().Split(':');
+                SpecialTags.Add(split[0], split[1]);
+            }
 
             Description = line;
         }

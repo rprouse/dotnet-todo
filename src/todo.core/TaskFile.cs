@@ -45,7 +45,7 @@ namespace Alteridem.Todo.Core
             search = search.OrderBy(t => t.Priority ?? '[');
             foreach(var task in search)
             {
-                ColorConsole.WriteLine(task.ToString(true));
+                ColorConsole.WriteLine(task.ToColorString(true));
             }
             Console.WriteLine("--");
             Console.WriteLine($"TODO: {search.Count()} of {tasks.Count} tasks shown");

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using ColoredConsole;
 
 namespace Alteridem.Todo.Core
 {
@@ -174,6 +175,20 @@ namespace Alteridem.Todo.Core
 
         public string ToString(bool includeLineNumber) =>
             includeLineNumber ? $"{LineNumber} {ToString()}" : ToString();
+
+        public ColorToken ToColorString(bool includeLineNumber)
+        {
+            string str = ToString(includeLineNumber);
+            if (Priority == null)
+                return str.White();
+            if (Priority == 'A')
+                return str.Yellow();
+            if (Priority == 'B')
+                return str.Green();
+            if (Priority == 'C')
+                return str.Blue();
+            return str.Gray();
+        }
 
         public override bool Equals(object obj)
         {

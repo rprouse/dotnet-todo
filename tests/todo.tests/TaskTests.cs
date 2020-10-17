@@ -58,5 +58,16 @@ namespace Alteridem.Todo.Tests
             task.Completed = false;
             Assert.That(task.ToString(), Is.EqualTo(expected));
         }
+
+        [TestCase("Item without a date", "2020-10-10", "2020-10-10 Item without a date")]
+        [TestCase("2019-01-01 Item with a date", "2020-10-10", "2020-10-10 Item with a date")]
+        [TestCase("(A) Item without a date", "2020-10-10", "(A) 2020-10-10 Item without a date")]
+        [TestCase("(B) 2019-01-01 Item with a date", "2020-10-10", "(B) 2020-10-10 Item with a date")]
+        public void AddingCreationDateToTask_IncludesDateInToString(string line, DateTime date, string expected)
+        {
+            var task = new Task(line);
+            task.CreationDate = date;
+            Assert.That(task.ToString(), Is.EqualTo(expected));
+        }
     }
 }

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "todo": {
+      "commandName": "Project",
+      "commandLineArgs": "-t add \"This is something to do!\""
+    }
+  }
+}

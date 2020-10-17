@@ -139,9 +139,9 @@ namespace Alteridem.Todo.Core
 
         public override string ToString()
         {
-            // If completed hasn't changed, just return the line
-            bool prevComplete = Line.StartsWith("x ");
-            if(prevComplete == Completed)
+            // Reparse and see if anything has changed
+            var prev = new Task(Line);
+            if(prev.Equals(this))
                 return Line;
 
             if(Completed)
@@ -159,6 +159,19 @@ namespace Alteridem.Todo.Core
                     CreationDate is null ? "" : CreationDate.Value.ToString("yyyy-MM-dd") + " ",
                     Description);
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if(obj is Task task)
+            {
+                return task.Completed == Completed &&
+                    task.CompletionDate == CompletionDate &&
+                    task.CreationDate == CreationDate &&
+                    task.Description == Description &&
+                    task.Priority == Priority;
+            }
+            return false;
         }
     }
 }

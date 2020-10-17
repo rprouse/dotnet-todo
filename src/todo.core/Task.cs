@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace Alteridem.Todo.Core
 {
-    public class Task
+    public class Task : IEquatable<Task>
     {
         private static readonly Regex CompletedRegex = new Regex(@"^x\s((\d{4})-(\d{2})-(\d{2}))?", RegexOptions.Compiled);
         private static readonly Regex PriorityRegex = new Regex(@"^\((?<priority>[A-Z])\)\s", RegexOptions.Compiled);
@@ -76,9 +76,20 @@ namespace Alteridem.Todo.Core
         /// </summary>
         public string Line { get; }
 
-        public Task(string line)
+        /// <summary>
+        /// There is nothing here to see
+        /// </summary>
+        public bool Empty => Line.Length == 0;
+
+        /// <summary>
+        /// The number of the current task in the file (1 based)
+        /// </summary>
+        public int LineNumber { get; }
+
+        public Task(string line, int lineNumber = 1)
         {
             Line = line.Trim();
+            LineNumber = lineNumber;
             Parse(line);
         }
 
@@ -161,6 +172,9 @@ namespace Alteridem.Todo.Core
             }
         }
 
+        public string ToString(bool includeLineNumber) =>
+            includeLineNumber ? $"{LineNumber} {ToString()}" : ToString();
+
         public override bool Equals(object obj)
         {
             if(obj is Task task)
@@ -173,5 +187,32 @@ namespace Alteridem.Todo.Core
             }
             return false;
         }
+
+        public bool Equals(Task other)
+        {
+            return other != null &&
+                   Completed == other.Completed &&
+                   Priority == other.Priority &&
+                   CompletionDate == other.CompletionDate &&
+                   CreationDate == other.CreationDate &&
+                   Description == other.Description;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 1655491887;
+            hashCode = hashCode * -1521134295 + Completed.GetHashCode();
+            hashCode = hashCode * -1521134295 + Priority.GetHashCode();
+            hashCode = hashCode * -1521134295 + CompletionDate.GetHashCode();
+            hashCode = hashCode * -1521134295 + CreationDate.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Description);
+            return hashCode;
+        }
+
+        public static bool operator ==(Task left, Task right) =>
+            EqualityComparer<Task>.Default.Equals(left, right);
+
+        public static bool operator !=(Task left, Task right) =>
+            !(left == right);
     }
 }

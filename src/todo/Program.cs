@@ -20,9 +20,17 @@ namespace Alteridem.Todo
             add.AddAlias("a");
             add.Handler = CommandHandler.Create((string task, bool t) => todo.Add(task, t));
 
+            var list = new Command("list", "Displays all tasks that contain TERM(s) sorted by priority with line numbers. Each task must match all TERM(s) (logical AND). Hides all tasks that contain TERM(s) preceded by a minus sign (i.e. -TERM).")
+            {
+                new Argument<string[]>("terms", () => new string[]{ })
+            };
+            list.AddAlias("ls");
+            list.Handler = CommandHandler.Create((string[] terms) => todo.List(terms));
+
             var root = new RootCommand
             {
                 add,
+                list
             };
 
             root.AddOption(new Option<bool>("-t", "Prepend the current date to a task automatically when it's added."));

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ColoredConsole;
 
 namespace Alteridem.Todo.Core
 {
@@ -24,9 +25,30 @@ namespace Alteridem.Todo.Core
 
             File.AppendAllText(_filename, taskStr + "\n");
 
-            var tasks = LoadTasks();
+            var tasks = LoadTasks().ToList();
             Console.WriteLine($"{tasks.Count} {taskStr}");
             Console.WriteLine($"TODO: {tasks.Count} added.");
+        }
+
+        public void List(string[] terms)
+        {
+            var tasks = LoadTasks();
+            int count = tasks.Count();
+            IEnumerable<Task> search = tasks;
+            foreach(var term in terms)
+            {
+                if(term.StartsWith("-") && term.Length > 1)
+                    search = search.Where(t => !t.Description.Contains(term.Substring(1)));
+                else
+                    search = search.Where(t => t.Description.Contains(term));
+            }
+            search = search.OrderBy(t => t.Priority ?? '[');
+            foreach(var task in search)
+            {
+                ColorConsole.WriteLine(task.ToString(true));
+            }
+            Console.WriteLine("--");
+            Console.WriteLine($"TODO: {search.Count()} of {tasks.Count} tasks shown");
         }
 
         private IList<Task> LoadTasks()
@@ -35,8 +57,8 @@ namespace Alteridem.Todo.Core
                 throw new FileNotFoundException("Task file not found", _filename);
 
             return File.ReadAllLines(_filename)
-                       .Where(l => !string.IsNullOrEmpty(l))
-                       .Select(line => new Task(line))
+                       .Select((line, index) => new Task(line, index + 1))
+                       .Where(t => !t.Empty)
                        .ToList();
         }
     }

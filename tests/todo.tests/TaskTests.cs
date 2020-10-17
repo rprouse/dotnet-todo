@@ -69,5 +69,13 @@ namespace Alteridem.Todo.Tests
             task.CreationDate = date;
             Assert.That(task.ToString(), Is.EqualTo(expected));
         }
+
+        [TestCase("")]
+        [TestCase("    ")]
+        public void HandlesBlankLinesAndWhiteSpace(string line)
+        {
+            var task = new Task(line);
+
+        }
     }
 }

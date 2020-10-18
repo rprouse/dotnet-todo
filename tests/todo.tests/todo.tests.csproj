@@ -16,7 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\todo.core\todo.core.csproj" />
+    <ProjectReference Include="..\..\src\todo.application\todo.application.csproj" />
+    <ProjectReference Include="..\..\src\todo.infrastructure\todo.infrastructure.csproj" />
     <ProjectReference Include="..\..\src\todo\todo.csproj" />
   </ItemGroup>
 

@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Alteridem.Todo.Core</RootNamespace>
+    <AssemblyName>Todo.Application</AssemblyName>
+    <RootNamespace>Alteridem.Todo.Application</RootNamespace>
     <Company>Alteridem Consulting</Company>
-    <Product>Todo.txt command line utility</Product>
+    <Product>Todo.txt command line utility application library</Product>
     <Copyright>Copyright (c) 2020 Rob Prouse</Copyright>
   </PropertyGroup>
 
@@ -12,6 +13,10 @@
     <PackageReference Include="ColoredConsole" Version="1.0.0" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20371.2" />
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\todo.domain\todo.domain.csproj" />
   </ItemGroup>
 
 </Project>

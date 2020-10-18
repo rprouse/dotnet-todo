@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Todo.Infrastructure</AssemblyName>
+    <RootNamespace>Alteridem.Todo.Infrastructure</RootNamespace>
+    <Company>Alteridem Consulting</Company>
+    <Product>Todo.txt command line utility infrastructure library</Product>
+    <Copyright>Copyright (c) 2020 Rob Prouse</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\todo.application\todo.application.csproj" />
+  </ItemGroup>
+
+</Project>

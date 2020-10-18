@@ -51,6 +51,11 @@ namespace Alteridem.Todo.Core
             Console.WriteLine($"TODO: {search.Count()} of {tasks.Count} tasks shown");
         }
 
+        public void Complete(uint[] items)
+        {
+
+        }
+
         private IList<Task> LoadTasks()
         {
             if (!File.Exists(_filename))

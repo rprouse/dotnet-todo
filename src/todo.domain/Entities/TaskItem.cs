@@ -74,12 +74,12 @@ namespace Alteridem.Todo.Domain.Entities
         /// <summary>
         /// The original full line of text for the todo
         /// </summary>
-        public string Line { get; }
+        public string Text { get; }
 
         /// <summary>
         /// There is nothing here to see
         /// </summary>
-        public bool Empty => Line.Length == 0;
+        public bool Empty => Text.Length == 0;
 
         /// <summary>
         /// The number of the current task in the file (1 based)
@@ -88,7 +88,7 @@ namespace Alteridem.Todo.Domain.Entities
 
         public TaskItem(string line, int lineNumber = 1)
         {
-            Line = line.Trim();
+            Text = line.Trim();
             LineNumber = lineNumber;
             Parse(line);
         }
@@ -151,9 +151,9 @@ namespace Alteridem.Todo.Domain.Entities
         public override string ToString()
         {
             // Reparse and see if anything has changed
-            var prev = new TaskItem(Line);
+            var prev = new TaskItem(Text);
             if(prev.Equals(this))
-                return Line;
+                return Text;
 
             if(Completed)
             {

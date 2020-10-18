@@ -38,11 +38,20 @@ namespace Alteridem.Todo.Tests.Application.Commands
             _taskFile.LineAppended.Should().Be($"{now} Test string");
         }
 
+        [Test]
         public async Task AddTaskCommandHandler_ReturnsLineNumber()
         {
             var command = new AddTaskCommand { Task = "Test string", AddCreationDate = true };
             TaskItem result = await _handler.Handle(command, new CancellationToken());
             result.LineNumber.Should().Be(1);
+        }
+
+        [Test]
+        public async Task AddTaskCommandHandler_ReturnsTask()
+        {
+            var command = new AddTaskCommand { Task = "Test string", AddCreationDate = true };
+            TaskItem result = await _handler.Handle(command, new CancellationToken());
+            result.Text.Should().EndWith("Test string");
         }
     }
 }

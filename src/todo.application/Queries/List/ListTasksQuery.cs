@@ -10,7 +10,9 @@ namespace Alteridem.Todo.Application.Queries.List
 {
     public sealed class ListTasksQuery : IRequest<ListTaskResponse>
     {
-        public string[] Terms { get; set; }
+        private string[] _terms;
+
+        public string[] Terms { get => _terms ?? new string[0]; set => _terms = value; }
     }
 
     public sealed class ListTasksQueryHandler : IRequestHandler<ListTasksQuery, ListTaskResponse>

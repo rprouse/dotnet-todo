@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
-using Alteridem.Todo.Core;
+using Alteridem.Todo.Domain.Entities;
 using NUnit.Framework;
 
-namespace Alteridem.Todo.Tests
+namespace Alteridem.Todo.Tests.Domain.Entities
 {
-    public class CompleteTaskTests
+    public class CompleteTaskItemTests
     {
         // https://github.com/todotxt/todo.txt#rule-1-a-completed-task-starts-with-an-lowercase-x-character-x
         [TestCase("x 2011-03-03 Call Mom", true)]
@@ -14,7 +13,7 @@ namespace Alteridem.Todo.Tests
         [TestCase("(A) x Find ticket prices", false)]
         public void Rule1_ACompletedTaskStartsWithALowercaseXCharacter(string line, bool completed)
         {
-            var task = new Task(line);
+            var task = new TaskItem(line);
             Assert.That(task.Completed, Is.EqualTo(completed));
         }
 
@@ -22,7 +21,7 @@ namespace Alteridem.Todo.Tests
         [Test]
         public void Rule2_TheDateOfCompletionAppearsDirectlyAfterTheXSeparatedByASpace()
         {
-            var task = new Task("x 2011-03-02 2011-03-01 Review Tim's pull request +TodoTxtTouch @github");
+            var task = new TaskItem("x 2011-03-02 2011-03-01 Review Tim's pull request +TodoTxtTouch @github");
             Assert.That(task.CompletionDate, Is.EqualTo(DateTime.Parse("2011-03-02")));
             Assert.That(task.CreationDate, Is.EqualTo(DateTime.Parse("2011-03-01")));
         }
@@ -31,14 +30,14 @@ namespace Alteridem.Todo.Tests
         [TestCase("x 2011-03-02 2011-03-01 Review Tim's pull request +TodoTxtTouch @github", "Review Tim's pull request +TodoTxtTouch @github")]
         public void ParsesOutDescriptionForCompleteTasks(string line, string description)
         {
-            var task = new Task(line);
+            var task = new TaskItem(line);
             Assert.That(task.Description, Is.EqualTo(description));
         }
 
         [Test]
         public void CanParseCompletedWithoutCompletionDate()
         {
-            var task = new Task("x Test raw string");
+            var task = new TaskItem("x Test raw string");
             Assert.That(task.Completed, Is.True);
             Assert.That(task.CompletionDate, Is.Not.Null);
             Assert.That(task.Description, Is.EqualTo("Test raw string"));

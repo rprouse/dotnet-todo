@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Alteridem.Todo.Core;
+using Alteridem.Todo.Domain.Entities;
 using NUnit.Framework;
 
-namespace Alteridem.Todo.Tests
+namespace Alteridem.Todo.Tests.Domain.Entities
 {
-    public class IncompleteTaskTests
+    public class IncompleteTaskItemTests
     {
         // https://github.com/todotxt/todo.txt#rule-2-a-tasks-creation-date-may-optionally-appear-directly-after-priority-and-a-space
         [TestCase("(A) Call Mom", 'A')]
@@ -14,7 +14,7 @@ namespace Alteridem.Todo.Tests
         [TestCase("(B)->Submit TPS report", null)]
         public void Rule1_IfPriorityExistsItAlwaysAppearsFirst(string line, char? priority)
         {
-            var task = new Task(line);
+            var task = new TaskItem(line);
             Assert.That(task.Priority, Is.EqualTo(priority));
         }
 
@@ -24,7 +24,7 @@ namespace Alteridem.Todo.Tests
         [TestCase("(A) Call Mom 2011-03-02", null)]
         public void Rule2_ATasksCreationDateMayOptionallyAppearDirectlyAfterPriorityAndASpace(string line, DateTime? creationDate)
         {
-            var task = new Task(line);
+            var task = new TaskItem(line);
             Assert.That(task.CreationDate, Is.EqualTo(creationDate));
         }
 
@@ -32,7 +32,7 @@ namespace Alteridem.Todo.Tests
         [TestCaseSource(nameof(Rule3Data))]
         public void Rule3_ContextsAndProjectsMayAppearAnywhereInTheLineAfterPriorityAndPrependedDate(string line, string[] projectTags, string[] contextTags)
         {
-            var task = new Task(line);
+            var task = new TaskItem(line);
             Assert.That(task.ProjectTags, Is.EqualTo(projectTags));
             Assert.That(task.ContextTags, Is.EqualTo(contextTags));
         }
@@ -46,7 +46,7 @@ namespace Alteridem.Todo.Tests
         [TestCase("(A) Call Mom 2011-03-02", "Call Mom 2011-03-02")]
         public void ParsesOutDescriptionForIncompleteTasks(string line, string description)
         {
-            var task = new Task(line);
+            var task = new TaskItem(line);
             Assert.That(task.Description, Is.EqualTo(description));
         }
 
@@ -54,7 +54,7 @@ namespace Alteridem.Todo.Tests
         [TestCaseSource(nameof(AdditionalFileFormatDefinitionData))]
         public void ParsesOutAdditionalFileFormatDefinitions(string line, IDictionary<string, string> specialTags)
         {
-            var task = new Task(line);
+            var task = new TaskItem(line);
             Assert.That(task.SpecialTags, Is.EqualTo(specialTags));
         }
 

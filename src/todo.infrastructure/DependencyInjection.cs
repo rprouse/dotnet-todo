@@ -1,4 +1,5 @@
-using System;
+using Alteridem.Todo.Domain.Interfaces;
+using Alteridem.Todo.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Alteridem.Todo.Infrastructure
@@ -7,6 +8,8 @@ namespace Alteridem.Todo.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
+            services.AddTransient<ITaskFile, TaskFile>();
+            services.AddTransient<ITaskConfiguration, TaskConfiguration>();
             return services;
         }
     }

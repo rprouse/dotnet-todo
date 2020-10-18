@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using ColoredConsole;
 
-namespace Alteridem.Todo.Core
+namespace Alteridem.Todo.Domain.Entities
 {
-    public class Task : IEquatable<Task>
+    public class TaskItem : IEquatable<TaskItem>
     {
         private static readonly Regex CompletedRegex = new Regex(@"^x\s((\d{4})-(\d{2})-(\d{2}))?", RegexOptions.Compiled);
         private static readonly Regex PriorityRegex = new Regex(@"^\((?<priority>[A-Z])\)\s", RegexOptions.Compiled);
@@ -85,9 +84,9 @@ namespace Alteridem.Todo.Core
         /// <summary>
         /// The number of the current task in the file (1 based)
         /// </summary>
-        public int LineNumber { get; }
+        public int LineNumber { get; set; }
 
-        public Task(string line, int lineNumber = 1)
+        public TaskItem(string line, int lineNumber = 1)
         {
             Line = line.Trim();
             LineNumber = lineNumber;
@@ -152,7 +151,7 @@ namespace Alteridem.Todo.Core
         public override string ToString()
         {
             // Reparse and see if anything has changed
-            var prev = new Task(Line);
+            var prev = new TaskItem(Line);
             if(prev.Equals(this))
                 return Line;
 
@@ -176,23 +175,23 @@ namespace Alteridem.Todo.Core
         public string ToString(bool includeLineNumber) =>
             includeLineNumber ? $"{LineNumber} {ToString()}" : ToString();
 
-        public ColorToken ToColorString(bool includeLineNumber)
+        public ColoredString ToColorString(bool includeLineNumber)
         {
             string str = ToString(includeLineNumber);
             if (Priority == null)
-                return str.White();
+                return new ColoredString(str, ConsoleColor.White);
             if (Priority == 'A')
-                return str.Yellow();
+                return new ColoredString(str, ConsoleColor.Yellow);
             if (Priority == 'B')
-                return str.Green();
+                return new ColoredString(str, ConsoleColor.Green);
             if (Priority == 'C')
-                return str.Blue();
-            return str.Gray();
+                return new ColoredString(str, ConsoleColor.Blue);
+            return new ColoredString(str, ConsoleColor.Gray);
         }
 
         public override bool Equals(object obj)
         {
-            if(obj is Task task)
+            if(obj is TaskItem task)
             {
                 return task.Completed == Completed &&
                     task.CompletionDate == CompletionDate &&
@@ -203,7 +202,7 @@ namespace Alteridem.Todo.Core
             return false;
         }
 
-        public bool Equals(Task other)
+        public bool Equals(TaskItem other)
         {
             return other != null &&
                    Completed == other.Completed &&
@@ -224,10 +223,10 @@ namespace Alteridem.Todo.Core
             return hashCode;
         }
 
-        public static bool operator ==(Task left, Task right) =>
-            EqualityComparer<Task>.Default.Equals(left, right);
+        public static bool operator ==(TaskItem left, TaskItem right) =>
+            EqualityComparer<TaskItem>.Default.Equals(left, right);
 
-        public static bool operator !=(Task left, Task right) =>
+        public static bool operator !=(TaskItem left, TaskItem right) =>
             !(left == right);
     }
 }

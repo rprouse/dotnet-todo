@@ -21,9 +21,4 @@
     <ProjectReference Include="..\todo.domain\todo.domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Commands\Add\" />
-    <Folder Include="Queries\List\" />
-  </ItemGroup>
-
 </Project>

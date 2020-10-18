@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Alteridem.Todo.Core;
+using Alteridem.Todo.Domain.Entities;
 using NUnit.Framework;
 
-namespace Alteridem.Todo.Tests
+namespace Alteridem.Todo.Tests.Domain.Entities
 {
-    public class TaskTests
+    public class TaskItemTests
     {
         [TestCase("x 2011-03-03 Call Mom")]
         [TestCase(" xylophone lesson")]
@@ -14,7 +12,7 @@ namespace Alteridem.Todo.Tests
         [TestCase("(A) x Find ticket prices ")]
         public void WhenTaskCompleteUnchanged_ToString_ShouldReturnProvidedStringTrimmed(string line)
         {
-            var task = new Task(line);
+            var task = new TaskItem(line);
             Assert.That(task.ToString(), Is.EqualTo(line.Trim()));
         }
          
@@ -23,7 +21,7 @@ namespace Alteridem.Todo.Tests
         [TestCase("2020-10-04 Test raw string with creation date")]
         public void WhenUncompletedTaskIsCompleted_CompletionDate_ShouldBeSet(string line)
         {
-            var task = new Task(line);
+            var task = new TaskItem(line);
             task.Completed = true;
             Assert.That(task.CompletionDate, Is.Not.Null);
         }
@@ -33,7 +31,7 @@ namespace Alteridem.Todo.Tests
         [TestCase("(B) 2020-10-04 Test raw string with creation date")]
         public void WhenUncompletedTaskIsCompleted_Priority_ShouldBeUnset(string line)
         {
-            var task = new Task(line);
+            var task = new TaskItem(line);
             task.Completed = true;
             Assert.That(task.Priority, Is.Null);
         }
@@ -45,7 +43,7 @@ namespace Alteridem.Todo.Tests
         {
             var n = DateTime.Now;
             expected = $"x {n:yyyy-MM-dd} {expected}";
-            var task = new Task(line);
+            var task = new TaskItem(line);
             task.Completed = true;
             Assert.That(task.ToString(), Is.EqualTo(expected));
         }
@@ -54,7 +52,7 @@ namespace Alteridem.Todo.Tests
         [TestCase("x 2020-10-05 2020-10-04 Test raw string with creation date", "2020-10-04 Test raw string with creation date")]
         public void WhenCompletedTaskIsUncompleted_ToString_ShouldNotIncludeCompletedAndDate(string line, string expected)
         {
-            var task = new Task(line);
+            var task = new TaskItem(line);
             task.Completed = false;
             Assert.That(task.ToString(), Is.EqualTo(expected));
         }
@@ -65,7 +63,7 @@ namespace Alteridem.Todo.Tests
         [TestCase("(B) 2019-01-01 Item with a date", "2020-10-10", "(B) 2020-10-10 Item with a date")]
         public void AddingCreationDateToTask_IncludesDateInToString(string line, DateTime date, string expected)
         {
-            var task = new Task(line);
+            var task = new TaskItem(line);
             task.CreationDate = date;
             Assert.That(task.ToString(), Is.EqualTo(expected));
         }
@@ -74,7 +72,7 @@ namespace Alteridem.Todo.Tests
         [TestCase("    ")]
         public void HandlesBlankLinesAndWhiteSpace(string line)
         {
-            var task = new Task(line);
+            var task = new TaskItem(line);
 
         }
     }

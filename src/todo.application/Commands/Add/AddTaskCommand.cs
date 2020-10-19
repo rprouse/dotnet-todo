@@ -29,7 +29,7 @@ namespace Alteridem.Todo.Application.Commands.Add
             if (request.AddCreationDate) task.CreationDate = DateTime.Now.Date;
             var taskStr = task.ToString();
 
-            _taskFile.AppendLine(taskStr);
+            _taskFile.AppendTodo(taskStr);
 
             task.LineNumber = _taskFile.LoadTasks().Count;
 

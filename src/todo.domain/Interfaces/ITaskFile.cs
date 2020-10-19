@@ -8,10 +8,21 @@ namespace Alteridem.Todo.Domain.Interfaces
     public interface ITaskFile
     {
         /// <summary>
-        /// Appends a line to the file
+        /// Appends a line to the todo file
         /// </summary>
         /// <param name="line"></param>
-        void AppendLine(string line);
+        void AppendTodo(string line);
+
+        /// <summary>
+        /// Appends a line to the done file
+        /// </summary>
+        /// <param name="line"></param>
+        void AppendDone(string line);
+
+        /// <summary>
+        /// Clears the given file
+        /// </summary>
+        void ClearTodo();
 
         /// <summary>
         /// Loads all tasks in the file

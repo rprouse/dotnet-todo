@@ -3,6 +3,7 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Threading.Tasks;
 using Alteridem.Todo.Application.Commands.Add;
+using Alteridem.Todo.Application.Commands.Archive;
 using Alteridem.Todo.Application.Commands.Do;
 using Alteridem.Todo.Application.Queries.List;
 using Alteridem.Todo.Extensions;
@@ -44,6 +45,18 @@ namespace Alteridem.Todo
             Console.WriteLine($"TODO: {task.LineNumber} added.");
         }
 
+        private async Task Archive()
+        {
+            var archiveCommand = new ArchiveTasksCommand();
+            var result = await Mediator.Send(archiveCommand);
+
+            foreach(var task in result)
+            {
+                Console.WriteLine(task.ToString(true));
+            }
+            Console.WriteLine($"{result.Count} tasks archived.");
+        }
+
         private async Task List(string[] terms)
         {
             var listTasksQuery = new ListTasksQuery { Terms = terms };
@@ -74,6 +87,9 @@ namespace Alteridem.Todo
             add.AddAlias("a");
             add.Handler = CommandHandler.Create(async (string task, bool t) => await Add(task, t));
 
+            var archive = new Command("archive", "Moves all done tasks from todo.txt to done.txt and removes blank lines.");
+            archive.Handler = CommandHandler.Create(async () => await Archive());
+
             var list = new Command("list", "Displays all tasks that contain TERM(s) sorted by priority with line numbers. Each task must match all TERM(s) (logical AND). Hides all tasks that contain TERM(s) preceded by a minus sign (i.e. -TERM).");
             list.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
             list.AddAlias("ls");
@@ -86,6 +102,7 @@ namespace Alteridem.Todo
             var root = new RootCommand
             {
                 add,
+                archive,
                 list,
                 @do
             };

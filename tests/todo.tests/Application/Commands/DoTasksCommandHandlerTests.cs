@@ -46,7 +46,7 @@ namespace Alteridem.Todo.Tests.Application.Commands
         public async Task DoTasksCommandHandler_RemovesGivenTasksAndBlankLinesFromTodoFile()
         {
             var command = new DoTasksCommand { ItemNumbers = new int[] { 1, 5 } };
-            var result = await _handler.Handle(command, new CancellationToken());
+            _ = await _handler.Handle(command, new CancellationToken());
             _taskFile.TaskLines.Should().HaveCount(5);
         }
 
@@ -54,7 +54,7 @@ namespace Alteridem.Todo.Tests.Application.Commands
         public async Task DoTasksCommandHandler_AddsGivenTasksToDoneFile()
         {
             var command = new DoTasksCommand { ItemNumbers = new int[] { 1, 5 } };
-            var result = await _handler.Handle(command, new CancellationToken());
+            _ = await _handler.Handle(command, new CancellationToken());
             _taskFile.DoneLines.Should().HaveCount(2);
         }
 
@@ -70,7 +70,7 @@ namespace Alteridem.Todo.Tests.Application.Commands
         public async Task DoTasksCommandHandler_WithoutArchive_RemovesBlankLinesFromTodoFile()
         {
             var command = new DoTasksCommand { ItemNumbers = new int[] { 1, 5 }, DontArchive = true };
-            var result = await _handler.Handle(command, new CancellationToken());
+            _ = await _handler.Handle(command, new CancellationToken());
             _taskFile.TaskLines.Should().HaveCount(7);
         }
 
@@ -78,7 +78,7 @@ namespace Alteridem.Todo.Tests.Application.Commands
         public async Task DoTasksCommandHandler_WithoutArchive_MarksBlankCompletedInTodoFile()
         {
             var command = new DoTasksCommand { ItemNumbers = new int[] { 1, 5 }, DontArchive = true };
-            var result = await _handler.Handle(command, new CancellationToken());
+            _ = await _handler.Handle(command, new CancellationToken());
             _taskFile.TaskLines[0].Should().StartWith("x ");
             _taskFile.TaskLines[3].Should().StartWith("x ");
         }
@@ -87,7 +87,7 @@ namespace Alteridem.Todo.Tests.Application.Commands
         public async Task DoTasksCommandHandler_DoesntAddsGivenTasksToDoneFile()
         {
             var command = new DoTasksCommand { ItemNumbers = new int[] { 1, 5 }, DontArchive = true };
-            var result = await _handler.Handle(command, new CancellationToken());
+            _ = await _handler.Handle(command, new CancellationToken());
             _taskFile.DoneLines.Should().HaveCount(0);
         }
 

@@ -8,6 +8,8 @@ using Alteridem.Todo.Application.Commands.Delete;
 using Alteridem.Todo.Application.Commands.Do;
 using Alteridem.Todo.Application.Queries.IndividualTask;
 using Alteridem.Todo.Application.Queries.List;
+using Alteridem.Todo.Application.Queries.ListContexts;
+using Alteridem.Todo.Application.Queries.ListProjects;
 using Alteridem.Todo.Domain.Common;
 using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Extensions;
@@ -148,6 +150,14 @@ namespace Alteridem.Todo
             Console.WriteLine($"total {result.ShownTasks + result.ShownDone} of {result.TotalTasks + result.TotalDone} tasks shown");
         }
 
+        private async Task ListContexts(string[] terms)
+        {
+            var query = new ListContextsQuery { Terms = terms };
+            var result = await Mediator.Send(query);
+            foreach (string context in result)
+                Console.WriteLine(context);
+        }
+
         private async Task ListFile(string filename, string[] terms)
         {
             var query = new ListTasksQuery { Filename = filename, Terms = terms };
@@ -158,6 +168,14 @@ namespace Alteridem.Todo
             }
             Console.WriteLine("--");
             Console.WriteLine($"{filename.ToUpper()}: {result.Tasks.Count} of {result.TotalTasks} tasks shown");
+        }
+
+        private async Task ListProjects(string[] terms)
+        {
+            var query = new ListProjectsQuery { Terms = terms };
+            var result = await Mediator.Send(query);
+            foreach (string project in result)
+                Console.WriteLine(project);
         }
 
         private async Task Complete(int[] items, bool dontArchive)
@@ -209,10 +227,18 @@ namespace Alteridem.Todo
             listall.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
             listall.Handler = CommandHandler.Create(async (string[] terms) => await ListAll(terms));
 
+            var listcon = new Command("listcon", "Lists all the task contexts that start with the @ sign in todo.txt. If TERM specified, considers only tasks that contain TERM(s).");
+            listcon.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
+            listcon.Handler = CommandHandler.Create(async (string[] terms) => await ListContexts(terms));
+
             var listfile = new Command("listfile", "Displays all tasks that contain TERM(s) sorted by priority with line numbers. Each task must match all TERM(s) (logical AND). Hides all tasks that contain TERM(s) preceded by a minus sign (i.e. -TERM).");
             listfile.AddArgument(new Argument<string>("filename"));
             listfile.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
             listfile.Handler = CommandHandler.Create(async (string filename, string[] terms) => await ListFile(filename, terms));
+
+            var listproj = new Command("listproj", "Lists all the projects (terms that start with a + sign) in todo.txt. If TERM specified, considers only tasks that contain TERM(s).");
+            listproj.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
+            listproj.Handler = CommandHandler.Create(async (string[] terms) => await ListProjects(terms));
 
             var root = new RootCommand
             {
@@ -224,7 +250,9 @@ namespace Alteridem.Todo
                 @do,
                 list,
                 listall,
-                listfile
+                listcon,
+                listfile,
+                listproj
             };
 
             root.AddOption(new Option<bool>("-a", "Don't auto-archive tasks automatically on completion"));

@@ -49,6 +49,14 @@ namespace Alteridem.Todo
             Console.WriteLine($"TODO: {task.LineNumber} added.");
         }
 
+        private async Task AddMultiple(string[] lines, bool addCreationDate)
+        {
+            foreach (string text in lines)
+            {
+                await Add(text, addCreationDate);
+            }
+        }
+
         private async Task AddTo(string filename, string text, bool addCreationDate)
         {
             var command = new AddTaskCommand { Filename = filename, Task = text, AddCreationDate = addCreationDate };
@@ -166,9 +174,13 @@ namespace Alteridem.Todo
         private RootCommand CreateCommands()
         {
             var add = new Command("add", "Adds THING I NEED TO DO to your todo.txt file on its own line.");
-            add.AddArgument(new Argument("task"));
+            add.AddArgument(new Argument<string>("task"));
             add.AddAlias("a");
             add.Handler = CommandHandler.Create(async (string task, bool t) => await Add(task, t));
+
+            var addm = new Command("addm", "Adds \"FIRST THING I NEED TO DO\" to your todo.txt on its own line and adds \"SECOND THING I NEED TO DO\" to you todo.txt on its own line.");
+            addm.AddArgument(new Argument<string[]>("tasks"));
+            addm.Handler = CommandHandler.Create(async (string[] tasks, bool t) => await AddMultiple(tasks, t));
 
             var addTo = new Command("addto", "Adds a line of text to any file located in the todo.txt directory.");
             addTo.AddArgument(new Argument<string>("filename"));
@@ -205,6 +217,7 @@ namespace Alteridem.Todo
             var root = new RootCommand
             {
                 add,
+                addm,
                 addTo,
                 archive,
                 delete,

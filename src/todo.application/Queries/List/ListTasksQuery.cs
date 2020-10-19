@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Alteridem.Todo.Application.Queries.List
 {
-    public sealed class ListTasksQuery : IRequest<ListTaskResponse>
+    public sealed class ListTasksQuery : IRequest<ListTasksResponse>
     {
         public string Filename;
 
@@ -18,7 +18,7 @@ namespace Alteridem.Todo.Application.Queries.List
         public string[] Terms { get => _terms ?? new string[0]; set => _terms = value; }
     }
 
-    public sealed class ListTasksQueryHandler : IRequestHandler<ListTasksQuery, ListTaskResponse>
+    public sealed class ListTasksQueryHandler : IRequestHandler<ListTasksQuery, ListTasksResponse>
     {
         private readonly ITaskFile _taskFile;
 
@@ -27,10 +27,9 @@ namespace Alteridem.Todo.Application.Queries.List
             _taskFile = taskFile;
         }
 
-        public Task<ListTaskResponse> Handle(ListTasksQuery request, CancellationToken cancellationToken)
+        public Task<ListTasksResponse> Handle(ListTasksQuery request, CancellationToken cancellationToken)
         {
             var tasks = _taskFile.LoadTasks(request.Filename);
-            int count = tasks.Count();
             IEnumerable<TaskItem> search = tasks;
             foreach (var term in request.Terms)
             {
@@ -41,7 +40,7 @@ namespace Alteridem.Todo.Application.Queries.List
             }
             search = search.OrderBy(t => t.Priority ?? '[');
 
-            return Task.FromResult(new ListTaskResponse { Tasks = search.ToList(), TotalTasks = tasks.Count });
+            return Task.FromResult(new ListTasksResponse { Tasks = search.ToList(), TotalTasks = tasks.Count });
         }
     }
 }

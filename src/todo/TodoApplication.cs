@@ -126,6 +126,20 @@ namespace Alteridem.Todo
             Console.WriteLine($"TODO: {result.Tasks.Count} of {result.TotalTasks} tasks shown");
         }
 
+        private async Task ListAll(string[] terms)
+        {
+            var query = new ListAllQuery { Terms = terms };
+            var result = await Mediator.Send(query);
+            foreach (var task in result.Tasks)
+            {
+                ColorConsole.WriteLine(task.ToColorString(true).ToColorToken());
+            }
+            Console.WriteLine("--");
+            Console.WriteLine($"TODO: {result.ShownTasks} of {result.TotalTasks} tasks shown");
+            Console.WriteLine($"DONE: {result.ShownDone} of {result.TotalDone} tasks shown");
+            Console.WriteLine($"total {result.ShownTasks + result.ShownDone} of {result.TotalTasks + result.TotalDone} tasks shown");
+        }
+
         private async Task ListFile(string filename, string[] terms)
         {
             var query = new ListTasksQuery { Filename = filename, Terms = terms };
@@ -179,6 +193,10 @@ namespace Alteridem.Todo
             list.AddAlias("ls");
             list.Handler = CommandHandler.Create(async (string[] terms) => await List(terms));
 
+            var listall = new Command("listall", "Displays all the lines in todo.txt AND done.txt that contain TERM(s) sorted by priority with line numbers. Hides all tasks that contain TERM(s) preceded by a minus sign(i.e. -TERM). If no TERM specified, lists entire todo.txt AND done.txt concatenated and sorted.");
+            listall.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
+            listall.Handler = CommandHandler.Create(async (string[] terms) => await ListAll(terms));
+
             var listfile = new Command("listfile", "Displays all tasks that contain TERM(s) sorted by priority with line numbers. Each task must match all TERM(s) (logical AND). Hides all tasks that contain TERM(s) preceded by a minus sign (i.e. -TERM).");
             listfile.AddArgument(new Argument<string>("filename"));
             listfile.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
@@ -192,6 +210,7 @@ namespace Alteridem.Todo
                 delete,
                 @do,
                 list,
+                listall,
                 listfile
             };
 

@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Alteridem.Todo.Domain.Entities;
@@ -26,7 +24,6 @@ namespace Alteridem.Todo.Application.Commands.Delete
 
         public Task<int> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
         {
-            IList<TaskItem> completed = new List<TaskItem>();
             var tasks = _taskFile.LoadTasks();
             var delTask = tasks.FirstOrDefault(t => t.LineNumber == request.ItemNumber);
             if (delTask is null)

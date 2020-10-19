@@ -27,7 +27,7 @@ namespace Alteridem.Todo.Tests.Application.Commands
                 "(B) This is in between with @context",
                 "(Z) Very low priority with +project",
                 "(E) Midrange",
-};
+            };
             _handler = new DeleteTaskCommandHandler(_taskFile);
         }
 

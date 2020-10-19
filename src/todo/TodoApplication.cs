@@ -8,6 +8,7 @@ using Alteridem.Todo.Application.Commands.Delete;
 using Alteridem.Todo.Application.Commands.Do;
 using Alteridem.Todo.Application.Queries.IndividualTask;
 using Alteridem.Todo.Application.Queries.List;
+using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Extensions;
 using ColoredConsole;
 using MediatR;
@@ -61,30 +62,43 @@ namespace Alteridem.Todo
 
         private async Task Delete(int item, string term)
         {
-            if (string.IsNullOrWhiteSpace(term))
-                await DeleteTask(item);
-            else
-                await DeleteTerm(item, term);
-        }
-
-        private async Task DeleteTerm(int item, string term)
-        {
-        }
-
-        private async Task DeleteTask(int item)
-        {
             var query = new TaskQuery { ItemNumber = item };
             var queryResult = await Mediator.Send(query);
-            if(queryResult == null)
+            if (queryResult == null)
             {
                 Console.WriteLine($"TODO: {item} not found; no removal done.");
                 return;
             }
-            Console.WriteLine($"Delete '{queryResult.Text}'? (y/n)");
+
+            if (string.IsNullOrWhiteSpace(term))
+                await DeleteTask(queryResult);
+            else
+                await DeleteTerm(queryResult, term);
+        }
+
+        private async Task DeleteTerm(TaskItem task, string term)
+        {
+            Console.WriteLine(task.ToString(true));
+            var command = new DeleteTermCommand { ItemNumber = task.LineNumber, Term = term };
+            var result = await Mediator.Send(command);
+            if(result.Success)
+            {
+                Console.WriteLine($"TODO: Removed '{term}' from task.");
+                Console.WriteLine(result.Task.ToString(true));
+            }
+            else
+            {
+                Console.WriteLine($"TODO: {term} not found; no removal done.");
+            }
+        }
+
+        private async Task DeleteTask(TaskItem task)
+        {
+            Console.WriteLine($"Delete '{task.Text}'? (y/n)");
             var key = Console.ReadKey();
             if (key.KeyChar == 'y' || key.KeyChar == 'Y')
             {
-                var command = new DeleteTaskCommand { ItemNumber = item };
+                var command = new DeleteTaskCommand { ItemNumber = task.LineNumber };
                 var result = await Mediator.Send(command);
                 Console.WriteLine($"TODO: {result} deleted.");
             }

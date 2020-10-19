@@ -15,27 +15,23 @@ namespace Alteridem.Todo.Infrastructure.Persistence
             _configuration = configuration;
         }
 
-        public void AppendTodo(string line)
+        public void AppendTo(string filename, string line)
         {
-            File.AppendAllText(_configuration.TodoFilename, line + "\n");
+            File.AppendAllText(_configuration.GetFullFilename(filename), line);
         }
 
-        public void AppendDone(string line)
+        public void Clear(string filename)
         {
-            File.AppendAllText(_configuration.DoneFilename, line + "\n");
+            File.Delete(_configuration.GetFullFilename(filename));
         }
 
-        public void ClearTodo()
+        public IList<TaskItem> LoadTasks(string filename)
         {
-            File.Delete(_configuration.TodoFilename);
-        }
-
-        public IList<TaskItem> LoadTasks()
-        {
-            if (!File.Exists(_configuration.TodoFilename))
+            string fullpath = _configuration.GetFullFilename(filename);
+            if (!File.Exists(fullpath))
                 return new List<TaskItem>();
 
-            return File.ReadAllLines(_configuration.TodoFilename)
+            return File.ReadAllLines(fullpath)
                        .Select((line, index) => new TaskItem(line, index + 1))
                        .Where(t => !t.Empty)
                        .ToList();

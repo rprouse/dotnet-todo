@@ -9,10 +9,7 @@ namespace Alteridem.Todo.Infrastructure.Persistence
         public string TaskDirectory =>
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Todo");
 
-        public string TodoFilename =>
-            Path.Combine(TaskDirectory, "todo.txt");
-
-        public string DoneFilename =>
-            Path.Combine(TaskDirectory, "done.txt");
+        public string GetFullFilename(string filename) =>
+            Path.Combine(TaskDirectory, filename);
     }
 }

@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Alteridem.Todo.Domain.Entities;
 
 namespace Alteridem.Todo.Domain.Interfaces
@@ -8,26 +6,21 @@ namespace Alteridem.Todo.Domain.Interfaces
     public interface ITaskFile
     {
         /// <summary>
-        /// Appends a line to the todo file
+        /// Appends a line to the file in the todo.txt directory
         /// </summary>
+        /// <param name="filename"></param>
         /// <param name="line"></param>
-        void AppendTodo(string line);
-
-        /// <summary>
-        /// Appends a line to the done file
-        /// </summary>
-        /// <param name="line"></param>
-        void AppendDone(string line);
+        void AppendTo(string filename, string line);
 
         /// <summary>
         /// Clears the given file
         /// </summary>
-        void ClearTodo();
+        void Clear(string filename);
 
         /// <summary>
-        /// Loads all tasks in the file
+        /// Loads all tasks in the given file
         /// </summary>
         /// <returns></returns>
-        IList<TaskItem> LoadTasks();
+        IList<TaskItem> LoadTasks(string filename);
     }
 }

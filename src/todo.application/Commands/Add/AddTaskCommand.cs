@@ -9,6 +9,8 @@ namespace Alteridem.Todo.Application.Commands.Add
 {
     public sealed class AddTaskCommand : IRequest<TaskItem>
     {
+        public string Filename { get; set; }
+
         public string Task { get; set; }
 
         public bool AddCreationDate { get; set; }
@@ -29,9 +31,9 @@ namespace Alteridem.Todo.Application.Commands.Add
             if (request.AddCreationDate) task.CreationDate = DateTime.Now.Date;
             var taskStr = task.ToString();
 
-            _taskFile.AppendTodo(taskStr);
+            _taskFile.AppendTo(request.Filename, taskStr);
 
-            task.LineNumber = _taskFile.LoadTasks().Count;
+            task.LineNumber = _taskFile.LoadTasks(request.Filename).Count;
 
             return Task.FromResult(task);
         }

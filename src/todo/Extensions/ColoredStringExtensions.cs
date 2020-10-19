@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Alteridem.Todo.Domain.Entities;
+using Alteridem.Todo.Domain.Common;
 using ColoredConsole;
 
 namespace Alteridem.Todo.Extensions

@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Alteridem.Todo.Domain.Common;
 using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using MediatR;
@@ -26,18 +24,18 @@ namespace Alteridem.Todo.Application.Commands.Archive
         public Task<IList<TaskItem>> Handle(ArchiveTasksCommand request, CancellationToken cancellationToken)
         {
             IList<TaskItem> completed = new List<TaskItem>();
-            var tasks = _taskFile.LoadTasks();
-            _taskFile.ClearTodo();
+            var tasks = _taskFile.LoadTasks(StandardFilenames.Todo);
+            _taskFile.Clear(StandardFilenames.Todo);
             foreach (var task in tasks)
             {
                 if (task.Completed)
                 {
-                    _taskFile.AppendDone(task.ToString());
+                    _taskFile.AppendTo(StandardFilenames.Done, task.ToString());
                     completed.Add(task);
                 }
                 else
                 {
-                    _taskFile.AppendTodo(task.ToString());
+                    _taskFile.AppendTo(StandardFilenames.Todo, task.ToString());
                 }
             }
             return Task.FromResult(completed);

@@ -8,17 +8,25 @@ namespace Alteridem.Todo.Tests.Mocks
 {
     public class TaskFileMock : ITaskFile
     {
-        public List<string> Lines { get; set; } = new List<string>();
+        public List<string> TaskLines { get; set; } = new List<string>();
+
+        public List<string> DoneLines { get; set; } = new List<string>();
 
         public string LineAppended { get; private set; }
-        public void AppendLine(string line)
+
+        public void AppendTodo(string line)
         {
             LineAppended = line;
-            Lines.Add(line);
+            TaskLines.Add(line);
         }
 
+        public void AppendDone(string line) =>
+            DoneLines.Add(line);
+
+        public void ClearTodo() => TaskLines.Clear();
+
         public IList<TaskItem> LoadTasks() =>
-            Lines.Select((line, index) => new TaskItem(line, index))
+            TaskLines.Select((line, index) => new TaskItem(line, index + 1))
                  .Where(t => !t.Empty)
                  .ToList();
     }

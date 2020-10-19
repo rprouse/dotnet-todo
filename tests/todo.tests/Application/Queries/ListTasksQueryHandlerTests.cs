@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Alteridem.Todo.Application.Queries.List;
 using Alteridem.Todo.Tests.Mocks;
 using FluentAssertions;
-using Microsoft.VisualBasic.CompilerServices;
 using NUnit.Framework;
 
 namespace Alteridem.Todo.Tests.Application.Queries
@@ -19,7 +18,7 @@ namespace Alteridem.Todo.Tests.Application.Queries
         public void SetUp()
         {
             _taskFile = new TaskFileMock();
-            _taskFile.Lines = new List<string>
+            _taskFile.TaskLines = new List<string>
             {
                 "2020-10-16 This is something to do!",
                 "2020-10-16 This is something to do with @context and a +project!",

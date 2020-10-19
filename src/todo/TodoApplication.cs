@@ -3,6 +3,7 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Threading.Tasks;
 using Alteridem.Todo.Application.Commands.Add;
+using Alteridem.Todo.Application.Commands.Do;
 using Alteridem.Todo.Application.Queries.List;
 using Alteridem.Todo.Extensions;
 using ColoredConsole;
@@ -55,8 +56,15 @@ namespace Alteridem.Todo
             Console.WriteLine($"TODO: {result.Tasks.Count} of {result.TotalTasks} tasks shown");
         }
 
-        private void Complete(uint[] items)
+        private async Task Complete(int[] items, bool dontArchive)
         {
+            var doTasksCommand = new DoTasksCommand { ItemNumbers = items, DontArchive = dontArchive };
+            var result = await Mediator.Send(doTasksCommand);
+            foreach(var completed in result)
+            {
+                Console.WriteLine(completed.ToString(true));
+                Console.WriteLine($"TODO: {completed.LineNumber} marked as done");
+            }
         }
 
         private RootCommand CreateCommands()
@@ -69,11 +77,11 @@ namespace Alteridem.Todo
             var list = new Command("list", "Displays all tasks that contain TERM(s) sorted by priority with line numbers. Each task must match all TERM(s) (logical AND). Hides all tasks that contain TERM(s) preceded by a minus sign (i.e. -TERM).");
             list.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
             list.AddAlias("ls");
-            list.Handler = CommandHandler.Create((string[] terms) => List(terms));
+            list.Handler = CommandHandler.Create(async (string[] terms) => await List(terms));
 
             var @do = new Command("do", "Marks task(s) on line ITEM# as done in todo.txt.");
-            @do.AddArgument(new Argument<uint[]>("items", () => new uint[] { }));
-            @do.Handler = CommandHandler.Create((uint[] items) => Complete(items));
+            @do.AddArgument(new Argument<int[]>("items", () => new int[] { }));
+            @do.Handler = CommandHandler.Create(async (int[] items, bool a) => await Complete(items, a));
 
             var root = new RootCommand
             {
@@ -82,6 +90,7 @@ namespace Alteridem.Todo
                 @do
             };
 
+            root.AddOption(new Option<bool>("-a", "Don't auto-archive tasks automatically on completion"));
             root.AddOption(new Option<bool>("-t", "Prepend the current date to a task automatically when it's added."));
 
             return root;

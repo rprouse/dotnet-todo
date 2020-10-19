@@ -17,7 +17,23 @@ namespace Alteridem.Todo.Infrastructure.Persistence
 
         public void AppendTo(string filename, string line)
         {
-            File.AppendAllText(_configuration.GetFullFilename(filename), line);
+            string fullpath = _configuration.GetFullFilename(filename);
+            string text = $"{(LastLineIsNewline(fullpath) ? "" : "\n")}{line}\n";
+            File.AppendAllText(fullpath, text);
+        }
+
+        private bool LastLineIsNewline(string fullpath)
+        {
+            using (var reader = new StreamReader(fullpath))
+            {
+                if (reader.BaseStream.Length < 2)
+                    return false;
+
+                reader.BaseStream.Seek(-2, SeekOrigin.End);
+                int c1 = reader.Read();
+                int c2 = reader.Read();
+                return (c1 == '\n' || c2 == '\n');
+            }
         }
 
         public void Clear(string filename)

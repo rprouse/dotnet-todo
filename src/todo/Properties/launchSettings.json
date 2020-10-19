@@ -2,7 +2,7 @@
   "profiles": {
     "todo": {
       "commandName": "Project",
-      "commandLineArgs": "listall"
+      "commandLineArgs": "-t addm \"This is one task\" \"This is another task\""
     }
   }
 }

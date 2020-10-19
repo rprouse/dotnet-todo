@@ -9,21 +9,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		LICENSE = LICENSE
+		Readme.md = Readme.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "todo.application", "src\todo.application\todo.application.csproj", "{5D76B11B-69B1-4BD4-8E81-05F9550DFE93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "todo.application", "src\todo.application\todo.application.csproj", "{5D76B11B-69B1-4BD4-8E81-05F9550DFE93}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{930F30B7-E6BD-4953-A211-84D467F9E355}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D878424A-0F62-47DD-A3A4-81694D02D958}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "todo", "src\todo\todo.csproj", "{3DAE8F8D-A0AD-4666-868D-4854FF8BF855}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "todo", "src\todo\todo.csproj", "{3DAE8F8D-A0AD-4666-868D-4854FF8BF855}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "todo.tests", "tests\todo.tests\todo.tests.csproj", "{849E524F-19B3-4DF0-BA55-F8E49F117566}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "todo.tests", "tests\todo.tests\todo.tests.csproj", "{849E524F-19B3-4DF0-BA55-F8E49F117566}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "todo.infrastructure", "src\todo.infrastructure\todo.infrastructure.csproj", "{C961D12D-553C-4D08-AD9D-4733B509D591}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "todo.infrastructure", "src\todo.infrastructure\todo.infrastructure.csproj", "{C961D12D-553C-4D08-AD9D-4733B509D591}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "todo.domain", "src\todo.domain\todo.domain.csproj", "{296B2679-11DD-4BCD-A795-0672A7FEE7AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "todo.domain", "src\todo.domain\todo.domain.csproj", "{296B2679-11DD-4BCD-A795-0672A7FEE7AC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

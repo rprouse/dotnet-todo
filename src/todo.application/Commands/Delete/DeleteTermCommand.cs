@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Alteridem.Todo.Domain.Common;
 using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using MediatR;
@@ -25,7 +26,7 @@ namespace Alteridem.Todo.Application.Commands.Delete
 
         public Task<DeleteTermResult> Handle(DeleteTermCommand request, CancellationToken cancellationToken)
         {
-            var tasks = _taskFile.LoadTasks();
+            var tasks = _taskFile.LoadTasks(StandardFilenames.Todo);
             var task = tasks.FirstOrDefault(t => t.LineNumber == request.ItemNumber);
             if (task is null)
             {
@@ -42,10 +43,10 @@ namespace Alteridem.Todo.Application.Commands.Delete
             task = new TaskItem(text, task.LineNumber);
             tasks.Add(task);
 
-            _taskFile.ClearTodo();
+            _taskFile.Clear(StandardFilenames.Todo);
             foreach (var t in tasks.OrderBy(t => t.LineNumber))
             {
-                _taskFile.AppendTodo(t.ToString());
+                _taskFile.AppendTo(StandardFilenames.Todo, t.ToString());
             }
             return Task.FromResult(new DeleteTermResult { Task = task, Success = true });
         }

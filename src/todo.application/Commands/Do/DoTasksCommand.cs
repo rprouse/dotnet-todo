@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Alteridem.Todo.Domain.Common;
 using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using MediatR;
@@ -30,7 +31,7 @@ namespace Alteridem.Todo.Application.Commands.Do
         public Task<IList<TaskItem>> Handle(DoTasksCommand request, CancellationToken cancellationToken)
         {
             IList<TaskItem> completed = new List<TaskItem>();
-            var tasks = _taskFile.LoadTasks();
+            var tasks = _taskFile.LoadTasks(StandardFilenames.Todo);
             foreach(uint taskNum in request.ItemNumbers)
             {
                 var task = tasks.FirstOrDefault(t => t.LineNumber == taskNum);
@@ -40,20 +41,20 @@ namespace Alteridem.Todo.Application.Commands.Do
                     completed.Add(task);
                 }
             }
-            _taskFile.ClearTodo();
+            _taskFile.Clear(StandardFilenames.Todo);
             foreach(var task in tasks.OrderBy(t => t.LineNumber))
             {
                 if(request.DontArchive)
                 {
-                    _taskFile.AppendTodo(task.ToString());
+                    _taskFile.AppendTo(StandardFilenames.Todo, task.ToString());
                 }
                 else if(!request.ItemNumbers.Contains(task.LineNumber))
                 {
-                    _taskFile.AppendTodo(task.ToString());
+                    _taskFile.AppendTo(StandardFilenames.Todo, task.ToString());
                 }
                 else
                 {
-                    _taskFile.AppendDone(task.ToString());
+                    _taskFile.AppendTo(StandardFilenames.Done, task.ToString());
                 }
             }
 

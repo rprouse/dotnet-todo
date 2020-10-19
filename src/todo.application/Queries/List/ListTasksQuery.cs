@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Alteridem.Todo.Domain.Common;
 using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using MediatR;
@@ -26,7 +27,7 @@ namespace Alteridem.Todo.Application.Queries.List
 
         public Task<ListTaskResponse> Handle(ListTasksQuery request, CancellationToken cancellationToken)
         {
-            var tasks = _taskFile.LoadTasks();
+            var tasks = _taskFile.LoadTasks(StandardFilenames.Todo);
             int count = tasks.Count();
             IEnumerable<TaskItem> search = tasks;
             foreach (var term in request.Terms)

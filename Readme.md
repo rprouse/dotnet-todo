@@ -197,7 +197,7 @@ todo mv ITEM# DEST [SRC]
 ```
 
 ### `prepend`
-Adds TEXT TO PREPEND to the beginning of the task on line ITEM#. Quotes optional.
+Adds TEXT TO PREPEND to the beginning of the task on line ITEM#.
 
 ```shell
 todo prepend ITEM# "TEXT TO PREPEND"
@@ -228,17 +228,11 @@ Hide context names in list output.
 ### `-+`
 Hide project names in list output.
 
-### `-c`
-Color mode
-
 ### `-d CONFIG_FILE`
 Use a configuration file other than the default `~/.todo/config`
 
 ### `-f`
 Forces actions without confirmation or interactive input.
-
-### `-h`
-Display a short help message; same as action "shorthelp"
 
 ### `-p`
 Plain mode turns off colors

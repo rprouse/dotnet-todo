@@ -8,6 +8,7 @@ using Alteridem.Todo.Application.Commands.Delete;
 using Alteridem.Todo.Application.Commands.Do;
 using Alteridem.Todo.Application.Queries.IndividualTask;
 using Alteridem.Todo.Application.Queries.List;
+using Alteridem.Todo.Domain.Common;
 using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Extensions;
 using ColoredConsole;
@@ -39,13 +40,22 @@ namespace Alteridem.Todo
             // TODO: Needed?
         }
 
-        private async Task Add(string str, bool addCreationDate)
+        private async Task Add(string text, bool addCreationDate)
         {
-            var command = new AddTaskCommand { Task = str, AddCreationDate = addCreationDate };
+            var command = new AddTaskCommand { Filename = StandardFilenames.Todo, Task = text, AddCreationDate = addCreationDate };
             var task = await Mediator.Send(command);
 
             Console.WriteLine(task.ToString());
             Console.WriteLine($"TODO: {task.LineNumber} added.");
+        }
+
+        private async Task AddTo(string filename, string text, bool addCreationDate)
+        {
+            var command = new AddTaskCommand { Filename = filename, Task = text, AddCreationDate = addCreationDate };
+            var task = await Mediator.Send(command);
+
+            Console.WriteLine(task.ToString());
+            Console.WriteLine($"TODO: {task.LineNumber} added to {filename}.");
         }
 
         private async Task Archive()
@@ -133,6 +143,11 @@ namespace Alteridem.Todo
             add.AddArgument(new Argument("task"));
             add.AddAlias("a");
             add.Handler = CommandHandler.Create(async (string task, bool t) => await Add(task, t));
+
+            var addTo = new Command("addto", "Adds a line of text to any file located in the todo.txt directory.");
+            addTo.AddArgument(new Argument<string>("filename"));
+            addTo.AddArgument(new Argument<string>("task"));
+            addTo.Handler = CommandHandler.Create(async (string filename, string task, bool t) => await AddTo(filename, task, t));
 
             var archive = new Command("archive", "Moves all done tasks from todo.txt to done.txt and removes blank lines.");
             archive.Handler = CommandHandler.Create(async () => await Archive());

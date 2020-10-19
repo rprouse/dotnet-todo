@@ -4,8 +4,6 @@ namespace Alteridem.Todo.Domain.Interfaces
     {
         string TaskDirectory { get; }
 
-        string TodoFilename { get; }
-
-        string DoneFilename { get; }
+        string GetFullFilename(string filename);
     }
 }

@@ -1,6 +1,6 @@
 using System;
 
-namespace Alteridem.Todo.Domain.Entities
+namespace Alteridem.Todo.Domain.Common
 {
     public struct ColoredString
     {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Alteridem.Todo.Domain.Common;
 using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using MediatR;
@@ -26,7 +27,7 @@ namespace Alteridem.Todo.Application.Queries.IndividualTask
 
         public Task<TaskItem> Handle(TaskQuery request, CancellationToken cancellationToken)
         {
-            var task = _taskFile.LoadTasks().FirstOrDefault(t => t.LineNumber == request.ItemNumber);
+            var task = _taskFile.LoadTasks(StandardFilenames.Todo).FirstOrDefault(t => t.LineNumber == request.ItemNumber);
             return Task.FromResult(task);
         }
     }

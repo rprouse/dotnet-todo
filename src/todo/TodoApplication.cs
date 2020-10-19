@@ -116,7 +116,7 @@ namespace Alteridem.Todo
 
         private async Task List(string[] terms)
         {
-            var query = new ListTasksQuery { Terms = terms };
+            var query = new ListTasksQuery { Filename = StandardFilenames.Todo, Terms = terms };
             var result = await Mediator.Send(query);
             foreach (var task in result.Tasks)
             {
@@ -124,6 +124,18 @@ namespace Alteridem.Todo
             }
             Console.WriteLine("--");
             Console.WriteLine($"TODO: {result.Tasks.Count} of {result.TotalTasks} tasks shown");
+        }
+
+        private async Task ListFile(string filename, string[] terms)
+        {
+            var query = new ListTasksQuery { Filename = filename, Terms = terms };
+            var result = await Mediator.Send(query);
+            foreach (var task in result.Tasks)
+            {
+                ColorConsole.WriteLine(task.ToColorString(true).ToColorToken());
+            }
+            Console.WriteLine("--");
+            Console.WriteLine($"{filename.ToUpper()}: {result.Tasks.Count} of {result.TotalTasks} tasks shown");
         }
 
         private async Task Complete(int[] items, bool dontArchive)
@@ -158,22 +170,29 @@ namespace Alteridem.Todo
             delete.AddAlias("rm");
             delete.Handler = CommandHandler.Create(async (int item, string term) => await Delete(item, term));
 
+            var @do = new Command("do", "Marks task(s) on line ITEM# as done in todo.txt.");
+            @do.AddArgument(new Argument<int[]>("items", () => new int[] { }));
+            @do.Handler = CommandHandler.Create(async (int[] items, bool a) => await Complete(items, a));
+
             var list = new Command("list", "Displays all tasks that contain TERM(s) sorted by priority with line numbers. Each task must match all TERM(s) (logical AND). Hides all tasks that contain TERM(s) preceded by a minus sign (i.e. -TERM).");
             list.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
             list.AddAlias("ls");
             list.Handler = CommandHandler.Create(async (string[] terms) => await List(terms));
 
-            var @do = new Command("do", "Marks task(s) on line ITEM# as done in todo.txt.");
-            @do.AddArgument(new Argument<int[]>("items", () => new int[] { }));
-            @do.Handler = CommandHandler.Create(async (int[] items, bool a) => await Complete(items, a));
+            var listfile = new Command("listfile", "Displays all tasks that contain TERM(s) sorted by priority with line numbers. Each task must match all TERM(s) (logical AND). Hides all tasks that contain TERM(s) preceded by a minus sign (i.e. -TERM).");
+            listfile.AddArgument(new Argument<string>("filename"));
+            listfile.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
+            listfile.Handler = CommandHandler.Create(async (string filename, string[] terms) => await ListFile(filename, terms));
 
             var root = new RootCommand
             {
                 add,
-                delete,
+                addTo,
                 archive,
+                delete,
+                @do,
                 list,
-                @do
+                listfile
             };
 
             root.AddOption(new Option<bool>("-a", "Don't auto-archive tasks automatically on completion"));

@@ -11,6 +11,8 @@ namespace Alteridem.Todo.Application.Queries.List
 {
     public sealed class ListTasksQuery : IRequest<ListTaskResponse>
     {
+        public string Filename;
+
         private string[] _terms;
 
         public string[] Terms { get => _terms ?? new string[0]; set => _terms = value; }
@@ -27,7 +29,7 @@ namespace Alteridem.Todo.Application.Queries.List
 
         public Task<ListTaskResponse> Handle(ListTasksQuery request, CancellationToken cancellationToken)
         {
-            var tasks = _taskFile.LoadTasks(StandardFilenames.Todo);
+            var tasks = _taskFile.LoadTasks(request.Filename);
             int count = tasks.Count();
             IEnumerable<TaskItem> search = tasks;
             foreach (var term in request.Terms)

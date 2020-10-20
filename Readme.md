@@ -26,6 +26,12 @@ command line from the solution root;
 dotnet tool install -g --add-source .\src\todo\nupkg\ dotnet-todo
 ```
 
+To update from a previous version,
+
+```sh
+dotnet tool update -g --add-source .\src\todo\nupkg\ dotnet-todo
+```
+
 ### Enabling Tab Completion
 
 This program supports tab completion using `dotnet-suggest`. To enable, for each shell

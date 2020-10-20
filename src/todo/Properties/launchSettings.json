@@ -2,7 +2,7 @@
   "profiles": {
     "todo": {
       "commandName": "Project",
-      "commandLineArgs": "listproj"
+      "commandLineArgs": "pri 1 A"
     }
   }
 }

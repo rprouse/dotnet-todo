@@ -43,6 +43,9 @@ get the following error;
 Response file not found 'work'
 ```
 
+In Powershell, the above command does not filter on the context and returns all items. If you try to add
+quotes, `todo list "@work"` in Powershell, then you get the same error.
+
 I have not found a way to escape the `@` on the command line and adding quotes does not work. As a workaround
 you can leave out the `@` sign and search using `todo list work`. This will also include tasks with the word
 work, but that is minor. I may add `listcon` and `listpri` commands in the future.

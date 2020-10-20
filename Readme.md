@@ -13,7 +13,7 @@ on the command line. Until this package is published, install it using the follo
 command line from the solution root;
 
 ```sh
-dotnet tool install -g --add-source .\todo\nupkg\ dotnet-todo
+dotnet tool install -g --add-source .\src\todo\nupkg\ dotnet-todo
 ```
 
 ## Enabling Tab Completion

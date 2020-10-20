@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Alteridem.Todo.Application.Commands.Archive;
+using Alteridem.Todo.Infrastructure.Persistence;
 using Alteridem.Todo.Tests.Mocks;
 using FluentAssertions;
 using NUnit.Framework;
@@ -35,7 +36,7 @@ namespace Alteridem.Todo.Tests.Application.Commands
                 "x 2020-09-27 Remember mom's birthday @home",
                 "x 2020-08-12 2020-07-23 Pay bills @home"
             };
-            _handler = new ArchiveTasksCommandHandler(_taskFile);
+            _handler = new ArchiveTasksCommandHandler(_taskFile, new TaskConfiguration());
         }
 
         [Test]

@@ -5,6 +5,12 @@ remain faithful to the command line and functionality of the original shell scri
 possible. As such, the [usage](#usage) below is a modified copy of the 
 [original on GitHub](https://github.com/todotxt/todo.txt-cli/blob/master/USAGE.md).
 
+- [Installation](#installation)
+- [Usage](#usage)
+- [Actions](#actions)
+- [Options](#options)
+- [Configuration](#configuration)
+
 ## Installation
 
 This program is a [dotnet tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools). 
@@ -16,7 +22,7 @@ command line from the solution root;
 dotnet tool install -g --add-source .\src\todo\nupkg\ dotnet-todo
 ```
 
-## Enabling Tab Completion
+### Enabling Tab Completion
 
 This program supports tab completion using `dotnet-suggest`. To enable, for each shell
 you must install the `dotnet-suggest` global tool and adding a shim to your profile. This 
@@ -31,7 +37,7 @@ for your shell.
 todo [-fhpantvV] [-d todo_config] action [task_number] [task_description]
 ```
 
-## Warning
+### Warning
 
 The Windows command line uses the `@` sign to indicate that command line arguments should be loaded from
 the file after the @ sign. This is a problem when searching for a context in your task list which also uses
@@ -269,3 +275,80 @@ Prepend the current date to a task automatically when it's added.
 
 ### `--version`
 Displays version, license and credits
+
+## Configuration
+
+This program does **not** support the default `todo.cfg` file as provided
+by the original shell script. Instead, this program uses a JSON file called
+`~/.todo.json` in the user's home directory.
+
+The defaults for this file put the todo files in a `Todo` directory in the
+users `Documents` directory. 
+
+Allowed colors are `black, blue, cyan, gray, green, magenta, red, white, 
+yellow, darkBlue, darkCyan, darkGray, darkGreen, darkMagenta, darkRed, 
+darkYellow`. Either omit or set any color to `null` to use the default 
+terminal color.
+
+You only need to add lines to `~/.todo.json` that you want to change.
+Everything else will be set to the defaults listed below.
+
+The format and defaults for this file are;
+
+```json
+{
+  "todoDirectory": "C:\\Users\\username\\Documents\\Todo",
+  "todoFile": "Todo.txt",
+  "doneFile": "Done.txt",
+  "reportFile": "Report.txt",
+  // Colors for each priority from A to Z
+  "priorities": {
+    "A": {
+      "color": "yellow",
+      "backgroundColor": null
+    },
+    "B": {
+      "color": "green",
+      "backgroundColor": null
+    },
+    "C": {
+      "color": "blue",
+      "backgroundColor": null
+    },
+    "D": {
+      "color": "cyan",
+      "backgroundColor": null
+    }
+  },
+  // Color of done items
+  "doneColor": {
+    "color": "darkGray",
+    "backgroundColor": null
+  },
+  // Color of any +projects within the text
+  "projectColor": {
+    "color": "red",
+    "backgroundColor": null
+  },
+  // Color of any @contexts within the text
+  "contextColor": {
+    "color": "red",
+    "backgroundColor": null
+  },
+  // Color of dates like 2020-10-22
+  "dateColor": {
+    "color": "blue",
+    "backgroundColor": null
+  },
+  // Color of the task numbers
+  "numberColor": {
+    "color": "gray",
+    "backgroundColor": null
+  },
+  // The color of name value pairs like DUE:2020-10-22
+  "metaColor": {
+    "color": "darkCyan",
+    "backgroundColor": null
+  }
+}
+```

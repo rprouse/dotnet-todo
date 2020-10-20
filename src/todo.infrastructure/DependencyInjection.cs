@@ -9,7 +9,7 @@ namespace Alteridem.Todo.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
             services.AddTransient<ITaskFile, TaskFile>();
-            services.AddTransient<ITaskConfiguration, TaskConfiguration>();
+            services.AddSingleton<ITaskConfiguration, TaskConfiguration>();
             return services;
         }
     }

@@ -38,4 +38,10 @@
     <ProjectReference Include="..\todo.infrastructure\todo.infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update=".todo.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Alteridem.Todo.Application.Commands.Do;
+using Alteridem.Todo.Infrastructure.Persistence;
 using Alteridem.Todo.Tests.Mocks;
 using FluentAssertions;
 using MediatR;
@@ -32,7 +33,7 @@ namespace Alteridem.Todo.Tests.Application.Commands
                 "(Z) Very low priority with +project",
                 "(E) Midrange",
             };
-            _handler = new DoTasksCommandHandler(_taskFile);
+            _handler = new DoTasksCommandHandler(_taskFile, new TaskConfiguration());
         }
 
         [Test]

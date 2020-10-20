@@ -3,11 +3,14 @@ using System.Linq;
 using Alteridem.Todo.Domain.Common;
 using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
+using Alteridem.Todo.Infrastructure.Persistence;
 
 namespace Alteridem.Todo.Tests.Mocks
 {
     public class TaskFileMock : ITaskFile
     {
+        private readonly ITaskConfiguration _config = new TaskConfiguration();
+
         public List<string> TaskLines { get; set; } = new List<string>();
 
         public List<string> DoneLines { get; set; } = new List<string>();
@@ -22,9 +25,9 @@ namespace Alteridem.Todo.Tests.Mocks
         {
             AppendToFilename = filename;
             LineAppended = line;
-            if (filename == StandardFilenames.Todo)
+            if (filename == _config.TodoFile)
                 TaskLines.Add(line);
-            else if (filename == StandardFilenames.Done)
+            else if (filename == _config.DoneFile)
                 DoneLines.Add(line);
             else
                 OtherLines.Add(line);
@@ -32,9 +35,9 @@ namespace Alteridem.Todo.Tests.Mocks
 
         public void Clear(string filename)
         {
-            if (filename == StandardFilenames.Todo)
+            if (filename == _config.TodoFile)
                 TaskLines.Clear();
-            else if (filename == StandardFilenames.Done)
+            else if (filename == _config.DoneFile)
                 DoneLines.Clear();
             else
                 OtherLines.Clear();
@@ -43,9 +46,9 @@ namespace Alteridem.Todo.Tests.Mocks
         public IList<TaskItem> LoadTasks(string filename)
         {
             IList<string> lines;
-            if (filename == StandardFilenames.Todo)
+            if (filename == _config.TodoFile)
                 lines = TaskLines;
-            else if (filename == StandardFilenames.Done)
+            else if (filename == _config.DoneFile)
                 lines = DoneLines;
             else
                 lines = OtherLines;

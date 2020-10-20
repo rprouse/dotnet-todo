@@ -20,15 +20,17 @@ namespace Alteridem.Todo.Application.Queries.ListProjects
     public sealed class ListProjectsQueryHandler : IRequestHandler<ListProjectsQuery, string[]>
     {
         private readonly ITaskFile _taskFile;
+        private readonly ITaskConfiguration _config;
 
-        public ListProjectsQueryHandler(ITaskFile taskFile)
+        public ListProjectsQueryHandler(ITaskFile taskFile, ITaskConfiguration config)
         {
             _taskFile = taskFile;
+            _config = config;
         }
 
         public Task<string[]> Handle(ListProjectsQuery request, CancellationToken cancellationToken)
         {
-            var tasks = _taskFile.LoadTasks(StandardFilenames.Todo);
+            var tasks = _taskFile.LoadTasks(_config.TodoFile);
             string[] positiveTerms = request.Terms
                 .Where(t => t.StartsWith("+"))
                 .ToArray();

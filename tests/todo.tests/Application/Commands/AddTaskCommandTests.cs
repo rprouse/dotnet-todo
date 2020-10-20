@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Alteridem.Todo.Application.Commands.Add;
 using Alteridem.Todo.Domain.Common;
 using Alteridem.Todo.Domain.Entities;
+using Alteridem.Todo.Domain.Interfaces;
+using Alteridem.Todo.Infrastructure.Persistence;
 using Alteridem.Todo.Tests.Mocks;
 using FluentAssertions;
 using NUnit.Framework;
@@ -12,6 +14,8 @@ namespace Alteridem.Todo.Tests.Application.Commands
 {
     public class AddTaskCommandTests
     {
+        private readonly ITaskConfiguration _config = new TaskConfiguration();
+
         TaskFileMock _taskFile;
         AddTaskCommandHandler _handler;
 
@@ -25,7 +29,7 @@ namespace Alteridem.Todo.Tests.Application.Commands
         [Test]
         public async Task AddTaskCommandHandler_AppendsTextToTodoFile()
         {
-            var command = new AddTaskCommand { Filename = StandardFilenames.Todo, Task = "Test string" };
+            var command = new AddTaskCommand { Filename = _config.TodoFile, Task = "Test string" };
             _ = await _handler.Handle(command, new CancellationToken());
             _taskFile.LineAppended.Should().Be("Test string");
             _taskFile.TaskLines[0].Should().Be("Test string");
@@ -34,7 +38,7 @@ namespace Alteridem.Todo.Tests.Application.Commands
         [Test]
         public async Task AddTaskCommandHandler_AppendsTextToDoneFile()
         {
-            var command = new AddTaskCommand { Filename = StandardFilenames.Done, Task = "Test string" };
+            var command = new AddTaskCommand { Filename = _config.DoneFile, Task = "Test string" };
             _ = await _handler.Handle(command, new CancellationToken());
             _taskFile.LineAppended.Should().Be("Test string");
             _taskFile.DoneLines[0].Should().Be("Test string");
@@ -43,7 +47,7 @@ namespace Alteridem.Todo.Tests.Application.Commands
         [Test]
         public async Task AddTaskCommandHandler_PrependsCreationDateToFile()
         {
-            var command = new AddTaskCommand { Filename = StandardFilenames.Todo, Task = "Test string", AddCreationDate = true };
+            var command = new AddTaskCommand { Filename = _config.TodoFile, Task = "Test string", AddCreationDate = true };
             _ = await _handler.Handle(command, new CancellationToken());
             string now = DateTime.Now.Date.ToString("yyyy-MM-dd");
             _taskFile.LineAppended.Should().Be($"{now} Test string");
@@ -52,7 +56,7 @@ namespace Alteridem.Todo.Tests.Application.Commands
         [Test]
         public async Task AddTaskCommandHandler_ReturnsLineNumber()
         {
-            var command = new AddTaskCommand { Filename = StandardFilenames.Todo, Task = "Test string", AddCreationDate = true };
+            var command = new AddTaskCommand { Filename = _config.TodoFile, Task = "Test string", AddCreationDate = true };
             TaskItem result = await _handler.Handle(command, new CancellationToken());
             result.LineNumber.Should().Be(1);
         }
@@ -60,7 +64,7 @@ namespace Alteridem.Todo.Tests.Application.Commands
         [Test]
         public async Task AddTaskCommandHandler_ReturnsTask()
         {
-            var command = new AddTaskCommand { Filename = StandardFilenames.Todo, Task = "Test string", AddCreationDate = true };
+            var command = new AddTaskCommand { Filename = _config.TodoFile, Task = "Test string", AddCreationDate = true };
             TaskItem result = await _handler.Handle(command, new CancellationToken());
             result.Text.Should().EndWith("Test string");
         }

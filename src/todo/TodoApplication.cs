@@ -14,6 +14,7 @@ using Alteridem.Todo.Application.Queries.ListContexts;
 using Alteridem.Todo.Application.Queries.ListProjects;
 using Alteridem.Todo.Domain.Common;
 using Alteridem.Todo.Domain.Entities;
+using Alteridem.Todo.Domain.Interfaces;
 using Alteridem.Todo.Extensions;
 using ColoredConsole;
 using MediatR;
@@ -27,12 +28,14 @@ namespace Alteridem.Todo
 
         private IServiceProvider Services { get; }
         private IMediator Mediator { get; }
+        private ITaskConfiguration Configuration { get; }
 
         public TodoApplication(IServiceCollection serviceCollection)
         {
             ConfigureServices(serviceCollection);
             Services = serviceCollection.BuildServiceProvider();
             Mediator = Services.GetService<IMediator>();
+            Configuration = Services.GetService<ITaskConfiguration>();
 
             ValidPriorities = Enumerable.Range(0, 26)
                 .Select(i => (char)(i + 'A'))
@@ -52,7 +55,7 @@ namespace Alteridem.Todo
 
         private async Task Add(string text, bool addCreationDate)
         {
-            var command = new AddTaskCommand { Filename = StandardFilenames.Todo, Task = text, AddCreationDate = addCreationDate };
+            var command = new AddTaskCommand { Filename = Configuration.TodoFile, Task = text, AddCreationDate = addCreationDate };
             var task = await Mediator.Send(command);
 
             Console.WriteLine(task.ToString());
@@ -134,7 +137,7 @@ namespace Alteridem.Todo
 
         private async Task List(string[] terms)
         {
-            var query = new ListTasksQuery { Filename = StandardFilenames.Todo, Terms = terms };
+            var query = new ListTasksQuery { Filename = Configuration.TodoFile, Terms = terms };
             var result = await Mediator.Send(query);
             foreach (var task in result.Tasks)
             {

@@ -20,15 +20,17 @@ namespace Alteridem.Todo.Application.Queries.ListContexts
     public sealed class ListContextsQueryHandler : IRequestHandler<ListContextsQuery, string[]>
     {
         private readonly ITaskFile _taskFile;
+        private readonly ITaskConfiguration _config;
 
-        public ListContextsQueryHandler(ITaskFile taskFile)
+        public ListContextsQueryHandler(ITaskFile taskFile, ITaskConfiguration config)
         {
             _taskFile = taskFile;
+            _config = config;
         }
 
         public Task<string[]> Handle(ListContextsQuery request, CancellationToken cancellationToken)
         {
-            var tasks = _taskFile.LoadTasks(StandardFilenames.Todo);
+            var tasks = _taskFile.LoadTasks(_config.TodoFile);
             string[] positiveTerms = request.Terms
                 .Where(t => t.StartsWith("@"))
                 .ToArray();

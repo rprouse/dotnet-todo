@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Alteridem.Todo.Application.Queries.List;
 using Alteridem.Todo.Domain.Common;
+using Alteridem.Todo.Infrastructure.Persistence;
 using Alteridem.Todo.Tests.Mocks;
 using FluentAssertions;
 using NUnit.Framework;
@@ -35,7 +36,7 @@ namespace Alteridem.Todo.Tests.Application.Queries
                "x One @context",
                "x Two +project"
            };
-            _handler = new ListAllQueryHandler(_taskFile);
+            _handler = new ListAllQueryHandler(_taskFile, new TaskConfiguration());
         }
 
         [Test]

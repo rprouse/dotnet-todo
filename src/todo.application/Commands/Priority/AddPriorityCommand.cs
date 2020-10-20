@@ -21,23 +21,25 @@ namespace Alteridem.Todo.Application.Commands.Priority
     public class AddPriorityCommandHandler : IRequestHandler<AddPriorityCommand, TaskItem>
     {
         private readonly ITaskFile _taskFile;
+        private readonly ITaskConfiguration _config;
 
-        public AddPriorityCommandHandler(ITaskFile taskFile)
+        public AddPriorityCommandHandler(ITaskFile taskFile, ITaskConfiguration config)
         {
             _taskFile = taskFile;
+            _config = config;
         }
 
         public Task<TaskItem> Handle(AddPriorityCommand request, CancellationToken cancellationToken)
         {
-            var tasks = _taskFile.LoadTasks(StandardFilenames.Todo);
+            var tasks = _taskFile.LoadTasks(_config.TodoFile);
             var task = tasks.FirstOrDefault(t => t.LineNumber == request.ItemNumber);
             if (task != null)
             {
                 task.Priority = request.Priority;
-                _taskFile.Clear(StandardFilenames.Todo);
+                _taskFile.Clear(_config.TodoFile);
                 foreach (var t in tasks.OrderBy(t => t.LineNumber))
                 {
-                    _taskFile.AppendTo(StandardFilenames.Todo, t.ToString());
+                    _taskFile.AppendTo(_config.TodoFile, t.ToString());
                 }
             }
             return Task.FromResult(task);

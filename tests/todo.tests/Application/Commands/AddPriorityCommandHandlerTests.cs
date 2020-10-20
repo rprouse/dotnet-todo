@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Alteridem.Todo.Application.Commands.Priority;
+using Alteridem.Todo.Infrastructure.Persistence;
 using Alteridem.Todo.Tests.Mocks;
 using FluentAssertions;
 using NUnit.Framework;
@@ -30,7 +31,7 @@ namespace Alteridem.Todo.Tests.Application.Commands
                 "(Z) Very low priority with +project",
                 "(E) Midrange",
             };
-            _handler = new AddPriorityCommandHandler(_taskFile);
+            _handler = new AddPriorityCommandHandler(_taskFile, new TaskConfiguration());
         }
 
         [Test]

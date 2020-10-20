@@ -7,6 +7,7 @@
     <Company>Alteridem Consulting</Company>
     <Product>Todo.txt command line utility domain library</Product>
     <Copyright>Copyright (c) 2020 Rob Prouse</Copyright>
+    <Version>0.1.2</Version>
   </PropertyGroup>
 
 </Project>

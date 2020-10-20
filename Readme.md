@@ -13,6 +13,10 @@ possible. As such, the [usage](#usage) below is a modified copy of the
 
 ## Installation
 
+This program uses [.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0) which is still
+in preview. You must download the .NET 5.0 SDK to install, and if you want to develop for this
+application, you must use at least [Visual Studio 2019 v16.8 Preview 4](https://visualstudio.microsoft.com/vs/preview/).
+
 This program is a [dotnet tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools). 
 Build it, then package it using the **Pack** command in Visual Studio or `dotnet pack` 
 on the command line. Until this package is published, install it using the following
@@ -346,5 +350,15 @@ The format and defaults for this file are;
     "color": "darkCyan",
     "backgroundColor": null
   }
+}
+```
+
+Here is very simple example, just changing the directory that your todo
+files are stored in and using the defaults for everything else. Note
+that the trailing slashes on the directory are optional.
+
+```json
+{
+  "todoDirectory": "G:\\My Drive\\todo\\"
 }
 ```

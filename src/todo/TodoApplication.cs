@@ -15,6 +15,7 @@ using Alteridem.Todo.Application.Queries.ListProjects;
 using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using Alteridem.Todo.Extensions;
+using Alteridem.Todo.Infrastructure.Persistence;
 using ColoredConsole;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;

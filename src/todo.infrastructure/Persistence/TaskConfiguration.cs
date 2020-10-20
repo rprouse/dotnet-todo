@@ -34,13 +34,12 @@ namespace Alteridem.Todo.Infrastructure.Persistence
             {
                 { 'A', new ConfigurationColor { Color = ConsoleColor.Yellow }},
                 { 'B', new ConfigurationColor { Color = ConsoleColor.Green }},
-                { 'C', new ConfigurationColor { Color = ConsoleColor.Blue }},
-                { 'D', new ConfigurationColor { Color = ConsoleColor.Cyan }},
+                { 'C', new ConfigurationColor { Color = ConsoleColor.Cyan }}
             };
             DoneColor = new ConfigurationColor { Color = ConsoleColor.DarkGray };
             ProjectColor = new ConfigurationColor { Color = ConsoleColor.Red };
             ContextColor = new ConfigurationColor { Color = ConsoleColor.Red };
-            DateColor = new ConfigurationColor { Color = ConsoleColor.Blue };
+            DateColor = new ConfigurationColor { Color = ConsoleColor.Magenta };
             NumberColor = new ConfigurationColor { Color = ConsoleColor.Gray };
             MetaColor = new ConfigurationColor { Color = ConsoleColor.DarkCyan };
         }

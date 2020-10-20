@@ -12,7 +12,6 @@ using Alteridem.Todo.Application.Queries.IndividualTask;
 using Alteridem.Todo.Application.Queries.List;
 using Alteridem.Todo.Application.Queries.ListContexts;
 using Alteridem.Todo.Application.Queries.ListProjects;
-using Alteridem.Todo.Domain.Common;
 using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using Alteridem.Todo.Extensions;
@@ -141,7 +140,7 @@ namespace Alteridem.Todo
             var result = await Mediator.Send(query);
             foreach (var task in result.Tasks)
             {
-                ColorConsole.WriteLine(task.ToColorString(true).ToColorToken());
+                ColorConsole.WriteLine(task.ToColorString(true, Configuration).ToColorTokens());
             }
             Console.WriteLine("--");
             Console.WriteLine($"TODO: {result.Tasks.Count} of {result.TotalTasks} tasks shown");
@@ -153,7 +152,7 @@ namespace Alteridem.Todo
             var result = await Mediator.Send(query);
             foreach (var task in result.Tasks)
             {
-                ColorConsole.WriteLine(task.ToColorString(true).ToColorToken());
+                ColorConsole.WriteLine(task.ToColorString(true, Configuration).ToColorTokens());
             }
             Console.WriteLine("--");
             Console.WriteLine($"TODO: {result.ShownTasks} of {result.TotalTasks} tasks shown");
@@ -175,7 +174,7 @@ namespace Alteridem.Todo
             var result = await Mediator.Send(query);
             foreach (var task in result.Tasks)
             {
-                ColorConsole.WriteLine(task.ToColorString(true).ToColorToken());
+                ColorConsole.WriteLine(task.ToColorString(true, Configuration).ToColorTokens());
             }
             Console.WriteLine("--");
             Console.WriteLine($"{filename.ToUpper()}: {result.Tasks.Count} of {result.TotalTasks} tasks shown");

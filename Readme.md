@@ -312,10 +312,6 @@ The format and defaults for this file are;
       "backgroundColor": null
     },
     "C": {
-      "color": "blue",
-      "backgroundColor": null
-    },
-    "D": {
       "color": "cyan",
       "backgroundColor": null
     }
@@ -337,7 +333,7 @@ The format and defaults for this file are;
   },
   // Color of dates like 2020-10-22
   "dateColor": {
-    "color": "blue",
+    "color": "magenta",
     "backgroundColor": null
   },
   // Color of the task numbers

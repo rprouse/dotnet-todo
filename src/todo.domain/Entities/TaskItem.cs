@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Alteridem.Todo.Domain.Common;
+using Alteridem.Todo.Domain.Interfaces;
 
 namespace Alteridem.Todo.Domain.Entities
 {
@@ -174,20 +176,74 @@ namespace Alteridem.Todo.Domain.Entities
         }
 
         public string ToString(bool includeLineNumber) =>
-            includeLineNumber ? $"{LineNumber} {ToString()}" : ToString();
+            includeLineNumber ? $"{LineNumber:00} {ToString()}" : ToString();
 
-        public ColoredString ToColorString(bool includeLineNumber)
+        public ColoredString[] ToColorString(bool includeLineNumber, ITaskConfiguration config)
         {
-            string str = ToString(includeLineNumber);
-            if (Priority == null)
-                return new ColoredString(str, ConsoleColor.White);
-            if (Priority == 'A')
-                return new ColoredString(str, ConsoleColor.Yellow);
-            if (Priority == 'B')
-                return new ColoredString(str, ConsoleColor.Green);
-            if (Priority == 'C')
-                return new ColoredString(str, ConsoleColor.Blue);
-            return new ColoredString(str, ConsoleColor.Gray);
+            IList<ColoredString> tokens = new List<ColoredString>();
+
+            // Priority color for completed items is always the done color
+            ConfigurationColor priorityColor = Completed ? config.DoneColor : null;
+            if (!Completed && Priority.HasValue)
+                config.Priorities.TryGetValue(Priority.Value, out priorityColor);
+
+            if (includeLineNumber)
+            {
+                ConsoleColor? color = config.NumberColor?.Color ?? priorityColor?.Color;
+                ConsoleColor? back = config.NumberColor?.BackgroundColor ?? priorityColor?.BackgroundColor;
+                tokens.Add(new ColoredString($"{LineNumber:00} ", color, back));
+            }
+
+            if (Completed)
+            {
+                tokens.Add(new ColoredString("x ", priorityColor?.Color, priorityColor?.BackgroundColor));
+            }
+
+            if (Priority.HasValue)
+            {
+                tokens.Add(new ColoredString($"({Priority}) ", priorityColor?.Color, priorityColor?.BackgroundColor));
+            }
+
+            if (CompletionDate.HasValue)
+            {
+                tokens.Add(new ColoredString(
+                    $"{CompletionDate.Value:yyyy-MM-dd} ", 
+                    config.DateColor?.Color ?? priorityColor?.Color,
+                    config.DateColor?.BackgroundColor ?? priorityColor?.BackgroundColor
+                ));
+            }
+
+            if (CreationDate.HasValue)
+            {
+                tokens.Add(new ColoredString(
+                    $"{CreationDate.Value:yyyy-MM-dd} ",
+                    config.DateColor?.Color ?? priorityColor?.Color,
+                    config.DateColor?.BackgroundColor ?? priorityColor?.BackgroundColor
+                ));
+            }
+
+            // Tokenize the +projects, @contexts and meta:data strings in the description
+            string[] words = Description.Split(' ', '\t');
+            foreach (string word in words)
+            {
+                if(word.StartsWith("+"))
+                    tokens.Add(new ColoredString($"{word} ", 
+                        config.ProjectColor?.Color ?? priorityColor?.Color,
+                        config.ProjectColor?.BackgroundColor ?? priorityColor?.BackgroundColor));
+                else if (word.StartsWith("@"))
+                    tokens.Add(new ColoredString($"{word} ",
+                        config.ContextColor?.Color ?? priorityColor?.Color,
+                        config.ContextColor?.BackgroundColor ?? priorityColor?.BackgroundColor));
+                else if (word.Contains(":"))
+                    tokens.Add(new ColoredString($"{word} ",
+                        config.MetaColor?.Color ?? priorityColor?.Color,
+                        config.MetaColor?.BackgroundColor ?? priorityColor?.BackgroundColor));
+                else
+                    tokens.Add(new ColoredString($"{word} ",
+                        priorityColor?.Color,
+                        priorityColor?.BackgroundColor));
+            }
+            return tokens.ToArray();
         }
 
         public override bool Equals(object obj)

@@ -19,15 +19,17 @@ namespace Alteridem.Todo.Application.Queries.IndividualTask
     public sealed class TaskQueryHandler : IRequestHandler<TaskQuery, TaskItem>
     {
         private readonly ITaskFile _taskFile;
+        private readonly ITaskConfiguration _config;
 
-        public TaskQueryHandler(ITaskFile taskFile)
+        public TaskQueryHandler(ITaskFile taskFile, ITaskConfiguration config)
         {
             _taskFile = taskFile;
+            _config = config;
         }
 
         public Task<TaskItem> Handle(TaskQuery request, CancellationToken cancellationToken)
         {
-            var task = _taskFile.LoadTasks(StandardFilenames.Todo).FirstOrDefault(t => t.LineNumber == request.ItemNumber);
+            var task = _taskFile.LoadTasks(_config.TodoFile).FirstOrDefault(t => t.LineNumber == request.ItemNumber);
             return Task.FromResult(task);
         }
     }

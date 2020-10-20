@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Alteridem.Todo.Application.Queries.ListProjects;
+using Alteridem.Todo.Infrastructure.Persistence;
 using Alteridem.Todo.Tests.Mocks;
 using FluentAssertions;
 using NUnit.Framework;
@@ -28,7 +29,7 @@ namespace Alteridem.Todo.Tests.Application.Queries
               "(Z) Very low priority with +project2",
               "(E) Midrange",
           };
-            _handler = new ListProjectsQueryHandler(_taskFile);
+            _handler = new ListProjectsQueryHandler(_taskFile, new TaskConfiguration());
         }
 
         [Test]

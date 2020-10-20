@@ -1,0 +1,55 @@
+{
+  "todoDirectory": "C:\\Users\\username\\Documents\\Todo",
+  "todoFile": "Todo.txt",
+  "doneFile": "Done.txt",
+  "reportFile": "Report.txt",
+  // Colors for each priority from A to Z
+  "priorities": {
+    "A": {
+      "color": "yellow",
+      "backgroundColor": null
+    },
+    "B": {
+      "color": "green",
+      "backgroundColor": null
+    },
+    "C": {
+      "color": "blue",
+      "backgroundColor": null
+    },
+    "D": {
+      "color": "cyan",
+      "backgroundColor": null
+    }
+  },
+  // Color of done items
+  "doneColor": {
+    "color": "darkGray",
+    "backgroundColor": null
+  },
+  // Color of any +projects within the text
+  "projectColor": {
+    "color": "red",
+    "backgroundColor": null
+  },
+  // Color of any @contexts within the text
+  "contextColor": {
+    "color": "red",
+    "backgroundColor": null
+  },
+  // Color of dates like 2020-10-22
+  "dateColor": {
+    "color": "blue",
+    "backgroundColor": null
+  },
+  // Color of the task numbers
+  "numberColor": {
+    "color": "gray",
+    "backgroundColor": null
+  },
+  // The color of name value pairs like DUE:2020-10-22
+  "metaColor": {
+    "color": "darkCyan",
+    "backgroundColor": null
+  }
+}

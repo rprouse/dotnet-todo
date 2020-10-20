@@ -19,16 +19,18 @@ namespace Alteridem.Todo.Application.Queries.List
     public sealed class ListAllQueryHandler : IRequestHandler<ListAllQuery, ListAllResponse>
     {
         private readonly ITaskFile _taskFile;
+        private readonly ITaskConfiguration _config;
 
-        public ListAllQueryHandler(ITaskFile taskFile)
+        public ListAllQueryHandler(ITaskFile taskFile, ITaskConfiguration config)
         {
             _taskFile = taskFile;
+            _config = config;
         }
 
         public Task<ListAllResponse> Handle(ListAllQuery request, CancellationToken cancellationToken)
         {
-            var tasks = _taskFile.LoadTasks(StandardFilenames.Todo);
-            var done = _taskFile.LoadTasks(StandardFilenames.Done).Select(t => new TaskItem(t.Text, 0)).ToList();    // Set line numbers to 0 for done
+            var tasks = _taskFile.LoadTasks(_config.TodoFile);
+            var done = _taskFile.LoadTasks(_config.DoneFile).Select(t => new TaskItem(t.Text, 0)).ToList();    // Set line numbers to 0 for done
             IEnumerable<TaskItem> taskSearch = tasks;
             IEnumerable<TaskItem> doneSearch = done;
             foreach (var term in request.Terms)

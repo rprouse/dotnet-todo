@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Alteridem.Todo</RootNamespace>
     <AssemblyName>todo</AssemblyName>
     <Authors>Rob Prouse</Authors>
@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://github.com/rprouse/guppi</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rprouse/guppi</RepositoryUrl>
     <PackageId>dotnet-todo</PackageId>
-    <Version>0.1.2</Version>
+    <Version>0.2.0</Version>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>todo</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
@@ -36,6 +36,12 @@
   <ItemGroup>
     <ProjectReference Include="..\todo.application\todo.application.csproj" />
     <ProjectReference Include="..\todo.infrastructure\todo.infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update=".todo.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

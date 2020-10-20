@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Alteridem.Todo.Application.Commands.Delete;
+using Alteridem.Todo.Infrastructure.Persistence;
 using Alteridem.Todo.Tests.Mocks;
 using FluentAssertions;
 using NUnit.Framework;
@@ -28,7 +29,7 @@ namespace Alteridem.Todo.Tests.Application.Commands
                 "(Z) Very low priority with +project",
                 "(E) Midrange",
             };
-            _handler = new DeleteTermCommandHandler(_taskFile);
+            _handler = new DeleteTermCommandHandler(_taskFile, new TaskConfiguration());
         }
 
         [Test]

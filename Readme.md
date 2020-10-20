@@ -13,7 +13,7 @@ on the command line. Until this package is published, install it using the follo
 command line from the solution root;
 
 ```sh
-dotnet tool install -g --add-source .\todo\nupkg\ dotnet-todo
+dotnet tool install -g --add-source .\src\todo\nupkg\ dotnet-todo
 ```
 
 ## Enabling Tab Completion
@@ -30,6 +30,27 @@ for your shell.
 ```shell
 todo [-fhpantvV] [-d todo_config] action [task_number] [task_description]
 ```
+
+## Warning
+
+The Windows command line uses the `@` sign to indicate that command line arguments should be loaded from
+the file after the @ sign. This is a problem when searching for a context in your task list which also uses
+the command line. For example, if I wanted to search for my tasks with `@work`, I would normally try this and
+get the following error;
+
+```shell
+> todo list @work
+Response file not found 'work'
+```
+
+In Powershell, the above command does not filter on the context and returns all items. If you try to add
+quotes, `todo list "@work"` in Powershell, then you get the same error.
+
+I have not found a way to escape the `@` on the command line and adding quotes does not work. As a workaround
+you can leave out the `@` sign and search using `todo list work`. This will also include tasks with the word
+work, but that is minor. I may add `listcon` and `listpri` commands in the future.
+
+If anyone has a proper workaround, please file an issue and I will update this.
 
 ## Actions
 

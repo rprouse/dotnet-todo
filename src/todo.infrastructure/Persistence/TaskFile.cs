@@ -24,6 +24,9 @@ namespace Alteridem.Todo.Infrastructure.Persistence
 
         private bool LastLineIsNewline(string fullpath)
         {
+            if (!File.Exists(fullpath))
+                return true;
+
             using (var reader = new StreamReader(fullpath))
             {
                 if (reader.BaseStream.Length < 2)

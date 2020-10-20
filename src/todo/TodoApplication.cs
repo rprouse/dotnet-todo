@@ -1,11 +1,13 @@
 using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.Linq;
 using System.Threading.Tasks;
 using Alteridem.Todo.Application.Commands.Add;
 using Alteridem.Todo.Application.Commands.Archive;
 using Alteridem.Todo.Application.Commands.Delete;
 using Alteridem.Todo.Application.Commands.Do;
+using Alteridem.Todo.Application.Commands.Priority;
 using Alteridem.Todo.Application.Queries.IndividualTask;
 using Alteridem.Todo.Application.Queries.List;
 using Alteridem.Todo.Application.Queries.ListContexts;
@@ -21,6 +23,8 @@ namespace Alteridem.Todo
 {
     public class TodoApplication
     {
+        readonly char[] ValidPriorities;
+
         private IServiceProvider Services { get; }
         private IMediator Mediator { get; }
 
@@ -29,6 +33,10 @@ namespace Alteridem.Todo
             ConfigureServices(serviceCollection);
             Services = serviceCollection.BuildServiceProvider();
             Mediator = Services.GetService<IMediator>();
+
+            ValidPriorities = Enumerable.Range(0, 26)
+                .Select(i => (char)(i + 'A'))
+                .ToArray();
         }
 
         public void Run()
@@ -189,6 +197,26 @@ namespace Alteridem.Todo
             }
         }
 
+        private async Task AddPriority(int item, char priority)
+        {
+            if(!ValidPriorities.Contains(priority))
+            {
+                Console.WriteLine($"note: PRIORITY must be anywhere from A to Z.");
+                return;
+            }
+            var command = new AddPriorityCommand { ItemNumber = item, Priority = priority };
+            var result = await Mediator.Send(command);
+            if (result is null)
+            {
+                Console.WriteLine($"TODO: No task {item}.");
+            }
+            else
+            {
+                Console.WriteLine(result.ToString(true));
+                Console.WriteLine($"TODO: {result.LineNumber} prioritized {result.Priority}");
+            }
+        }
+
         private RootCommand CreateCommands()
         {
             var add = new Command("add", "Adds THING I NEED TO DO to your todo.txt file on its own line.");
@@ -240,6 +268,11 @@ namespace Alteridem.Todo
             listproj.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
             listproj.Handler = CommandHandler.Create(async (string[] terms) => await ListProjects(terms));
 
+            var pri = new Command("pri", "Adds PRIORITY to task on line ITEM#. If the task is already prioritized, replaces current priority with new PRIORITY. PRIORITY must be a letter between A and Z.");
+            pri.AddArgument(new Argument<int>("item"));
+            pri.AddArgument(new Argument<char>("priority"));
+            pri.Handler = CommandHandler.Create(async (int item, char priority) => await AddPriority(item, priority));
+
             var root = new RootCommand
             {
                 add,
@@ -252,7 +285,8 @@ namespace Alteridem.Todo
                 listall,
                 listcon,
                 listfile,
-                listproj
+                listproj,
+                pri
             };
 
             root.AddOption(new Option<bool>("-a", "Don't auto-archive tasks automatically on completion"));

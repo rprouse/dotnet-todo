@@ -37,7 +37,7 @@ namespace Alteridem.Todo.Application.Commands.Priority
                 _taskFile.Clear(StandardFilenames.Todo);
                 foreach (var t in tasks.OrderBy(t => t.LineNumber))
                 {
-                    _taskFile.AppendTo(StandardFilenames.Todo, task.ToString());
+                    _taskFile.AppendTo(StandardFilenames.Todo, t.ToString());
                 }
             }
             return Task.FromResult(task);

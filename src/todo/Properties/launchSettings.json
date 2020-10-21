@@ -2,7 +2,7 @@
   "profiles": {
     "todo": {
       "commandName": "Project",
-      "commandLineArgs": "-d \"C:\\Src\\Github\\dotnet-todo\\src\\todo\\.todo.json\" list"
+      "commandLineArgs": "list"
     }
   }
 }

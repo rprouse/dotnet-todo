@@ -8,6 +8,7 @@ using Alteridem.Todo.Application;
 using Alteridem.Todo.Application.Commands.Add;
 using Alteridem.Todo.Application.Commands.Archive;
 using Alteridem.Todo.Application.Commands.Delete;
+using Alteridem.Todo.Application.Commands.Deprioritize;
 using Alteridem.Todo.Application.Commands.Do;
 using Alteridem.Todo.Application.Commands.Priority;
 using Alteridem.Todo.Application.Queries.IndividualTask;
@@ -42,7 +43,7 @@ namespace Alteridem.Todo
 
         private void Configure(string configFile)
         {
-            if (!File.Exists(configFile))
+            if (configFile != null && !File.Exists(configFile))
             {
                 ColorConsole.WriteLine($"{configFile} does not exist.".Red());
                 ColorConsole.WriteLine("Using default configuration.".Red());
@@ -148,6 +149,17 @@ namespace Alteridem.Todo
                 var command = new DeleteTaskCommand { ItemNumber = task.LineNumber };
                 var result = await Mediator.Send(command);
                 Console.WriteLine($"TODO: {result} deleted.");
+            }
+        }
+
+        private async Task Deprioritize(int[] items)
+        {
+            var command = new DeprioritizeCommand { ItemNumbers = items };
+            var result = await Mediator.Send(command);
+            foreach(var task in result)
+            {
+                Console.WriteLine(task.ToString(true));
+                Console.WriteLine($"TODO: {task.LineNumber} deprioritized.");
             }
         }
 
@@ -281,6 +293,15 @@ namespace Alteridem.Todo
                 await Delete(item, term);
             });
 
+            var depri = new Command("depri", "Deprioritizes (removes the priority) from the task(s) on line ITEM# in todo.txt.");
+            depri.AddAlias("dp");
+            depri.AddArgument(new Argument<int[]>("items", () => new int[] { }));
+            depri.Handler = CommandHandler.Create(async (int[] items, string d) => 
+            {
+                Configure(d);
+                await Deprioritize(items);
+            });
+
             var @do = new Command("do", "Marks task(s) on line ITEM# as done in todo.txt.");
             @do.AddArgument(new Argument<int[]>("items", () => new int[] { }));
             @do.Handler = CommandHandler.Create(async (int[] items, bool a, string d) =>
@@ -352,6 +373,7 @@ namespace Alteridem.Todo
                 addTo,
                 archive,
                 delete,
+                depri,
                 @do,
                 list,
                 listall,

@@ -1,8 +1,10 @@
 using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Alteridem.Todo.Application;
 using Alteridem.Todo.Application.Commands.Add;
 using Alteridem.Todo.Application.Commands.Archive;
 using Alteridem.Todo.Application.Commands.Delete;
@@ -15,6 +17,7 @@ using Alteridem.Todo.Application.Queries.ListProjects;
 using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using Alteridem.Todo.Extensions;
+using Alteridem.Todo.Infrastructure;
 using Alteridem.Todo.Infrastructure.Persistence;
 using ColoredConsole;
 using MediatR;
@@ -26,31 +29,44 @@ namespace Alteridem.Todo
     {
         readonly char[] ValidPriorities;
 
-        private IServiceProvider Services { get; }
-        private IMediator Mediator { get; }
-        private ITaskConfiguration Configuration { get; }
+        private IServiceProvider Services { get; set; }
+        private IMediator Mediator { get; set; }
+        private ITaskConfiguration Configuration { get; set; }
 
-        public TodoApplication(IServiceCollection serviceCollection)
+        public TodoApplication()
         {
-            ConfigureServices(serviceCollection);
-            Services = serviceCollection.BuildServiceProvider();
-            Mediator = Services.GetService<IMediator>();
-            Configuration = Services.GetService<ITaskConfiguration>();
-
             ValidPriorities = Enumerable.Range(0, 26)
                 .Select(i => (char)(i + 'A'))
                 .ToArray();
+        }
+
+        private void Configure(string configFile)
+        {
+            if (!File.Exists(configFile))
+            {
+                ColorConsole.WriteLine($"{configFile} does not exist.".Red());
+                ColorConsole.WriteLine("Using default configuration.".Red());
+                configFile = null;
+            }
+
+            if (configFile == null)
+                configFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".todo.json");
+
+            IServiceCollection serviceCollection = new ServiceCollection();
+
+            serviceCollection
+                .AddApplication()
+                .AddInfrastructure(configFile);
+
+            Services = serviceCollection.BuildServiceProvider();
+            Mediator = Services.GetService<IMediator>();
+            Configuration = Services.GetService<ITaskConfiguration>();
         }
 
         public void Run()
         {
             var root = CreateCommands();
             root.Invoke(Environment.GetCommandLineArgs());
-        }
-
-        private void ConfigureServices(IServiceCollection serviceCollection)
-        {
-            // TODO: Needed?
         }
 
         private async Task Add(string text, bool addCreationDate)
@@ -79,7 +95,7 @@ namespace Alteridem.Todo
             Console.WriteLine($"TODO: {task.LineNumber} added to {filename}.");
         }
 
-        private async Task Archive()
+        private async Task Archive(string configFile)
         {
             var command = new ArchiveTasksCommand();
             var result = await Mediator.Send(command);
@@ -112,7 +128,7 @@ namespace Alteridem.Todo
             Console.WriteLine(task.ToString(true));
             var command = new DeleteTermCommand { ItemNumber = task.LineNumber, Term = term };
             var result = await Mediator.Send(command);
-            if(result.Success)
+            if (result.Success)
             {
                 Console.WriteLine($"TODO: Removed '{term}' from task.");
                 Console.WriteLine(result.Task.ToString(true));
@@ -202,7 +218,7 @@ namespace Alteridem.Todo
 
         private async Task AddPriority(int item, char priority)
         {
-            if(!ValidPriorities.Contains(priority))
+            if (!ValidPriorities.Contains(priority))
             {
                 Console.WriteLine($"note: PRIORITY must be anywhere from A to Z.");
                 return;
@@ -225,58 +241,106 @@ namespace Alteridem.Todo
             var add = new Command("add", "Adds THING I NEED TO DO to your todo.txt file on its own line.");
             add.AddArgument(new Argument<string>("task"));
             add.AddAlias("a");
-            add.Handler = CommandHandler.Create(async (string task, bool t) => await Add(task, t));
+            add.Handler = CommandHandler.Create(async (string task, bool t, string d) =>
+            {
+                Configure(d);
+                await Add(task, t);
+            });
 
             var addm = new Command("addm", "Adds \"FIRST THING I NEED TO DO\" to your todo.txt on its own line and adds \"SECOND THING I NEED TO DO\" to you todo.txt on its own line.");
             addm.AddArgument(new Argument<string[]>("tasks"));
-            addm.Handler = CommandHandler.Create(async (string[] tasks, bool t) => await AddMultiple(tasks, t));
+            addm.Handler = CommandHandler.Create(async (string[] tasks, bool t, string d) =>
+            {
+                Configure(d);
+                await AddMultiple(tasks, t);
+            });
 
             var addTo = new Command("addto", "Adds a line of text to any file located in the todo.txt directory.");
             addTo.AddArgument(new Argument<string>("filename"));
             addTo.AddArgument(new Argument<string>("task"));
-            addTo.Handler = CommandHandler.Create(async (string filename, string task, bool t) => await AddTo(filename, task, t));
+            addTo.Handler = CommandHandler.Create(async (string filename, string task, bool t, string d) =>
+            {
+                Configure(d);
+                await AddTo(filename, task, t);
+            });
 
             var archive = new Command("archive", "Moves all done tasks from todo.txt to done.txt and removes blank lines.");
-            archive.Handler = CommandHandler.Create(async () => await Archive());
+            archive.Handler = CommandHandler.Create(async (string d) =>
+            {
+                Configure(d);
+                await Archive(d);
+            });
 
-            var delete = new Command("delete", "Deletes the task on line ITEM# in todo.txt. If TERM specified, deletes only TERM from the task.");
+            var delete = new Command("delete", "Deletes the task on line ITEM# in todo.txt. If TERM specifiedeletes only TERM from the task.");
             delete.AddArgument(new Argument<int[]>("item"));
             delete.AddArgument(new Argument<string>("term", () => null));
             delete.AddAlias("rm");
-            delete.Handler = CommandHandler.Create(async (int item, string term) => await Delete(item, term));
+            delete.Handler = CommandHandler.Create(async (int item, string term, string d) =>
+            {
+                Configure(d);
+                await Delete(item, term);
+            });
 
             var @do = new Command("do", "Marks task(s) on line ITEM# as done in todo.txt.");
             @do.AddArgument(new Argument<int[]>("items", () => new int[] { }));
-            @do.Handler = CommandHandler.Create(async (int[] items, bool a) => await Complete(items, a));
+            @do.Handler = CommandHandler.Create(async (int[] items, bool a, string d) =>
+            {
+                Configure(d);
+                await Complete(items, a);
+            });
 
             var list = new Command("list", "Displays all tasks that contain TERM(s) sorted by priority with line numbers. Each task must match all TERM(s) (logical AND). Hides all tasks that contain TERM(s) preceded by a minus sign (i.e. -TERM).");
             list.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
             list.AddAlias("ls");
-            list.Handler = CommandHandler.Create(async (string[] terms) => await List(terms));
+            list.Handler = CommandHandler.Create(async (string[] terms, string d) =>
+            {
+                Configure(d);
+                await List(terms);
+            });
 
             var listall = new Command("listall", "Displays all the lines in todo.txt AND done.txt that contain TERM(s) sorted by priority with line numbers. Hides all tasks that contain TERM(s) preceded by a minus sign(i.e. -TERM). If no TERM specified, lists entire todo.txt AND done.txt concatenated and sorted.");
             listall.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
-            listall.Handler = CommandHandler.Create(async (string[] terms) => await ListAll(terms));
+            listall.Handler = CommandHandler.Create(async (string[] terms, string d) =>
+            {
+                Configure(d);
+                await ListAll(terms);
+            });
 
             var listcon = new Command("listcon", "Lists all the task contexts that start with the @ sign in todo.txt. If TERM specified, considers only tasks that contain TERM(s).");
             listcon.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
-            listcon.Handler = CommandHandler.Create(async (string[] terms) => await ListContexts(terms));
+            listcon.Handler = CommandHandler.Create(async (string[] terms, string d) =>
+            {
+                Configure(d);
+                await ListContexts(terms);
+            });
 
             var listfile = new Command("listfile", "Displays all tasks that contain TERM(s) sorted by priority with line numbers. Each task must match all TERM(s) (logical AND). Hides all tasks that contain TERM(s) preceded by a minus sign (i.e. -TERM).");
             listfile.AddArgument(new Argument<string>("filename"));
             listfile.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
-            listfile.Handler = CommandHandler.Create(async (string filename, string[] terms) => await ListFile(filename, terms));
+            listfile.Handler = CommandHandler.Create(async (string filename, string[] terms, string d) =>
+            {
+                Configure(d);
+                await ListFile(filename, terms);
+            });
 
             var listproj = new Command("listproj", "Lists all the projects (terms that start with a + sign) in todo.txt. If TERM specified, considers only tasks that contain TERM(s).");
             listproj.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
-            listproj.Handler = CommandHandler.Create(async (string[] terms) => await ListProjects(terms));
+            listproj.Handler = CommandHandler.Create(async (string[] terms, string d) =>
+            {
+                Configure(d);
+                await ListProjects(terms);
+            });
 
             var pri = new Command("pri", "Adds PRIORITY to task on line ITEM#. If the task is already prioritized, replaces current priority with new PRIORITY. PRIORITY must be a letter between A and Z.");
             pri.AddArgument(new Argument<int>("item"));
             pri.AddArgument(new Argument<char>("priority"));
-            pri.Handler = CommandHandler.Create(async (int item, char priority) => await AddPriority(item, priority));
+            pri.Handler = CommandHandler.Create(async (int item, char priority, string d) =>
+            {
+                Configure(d);
+                await AddPriority(item, priority);
+            });
 
-            var root = new RootCommand
+            var root = new RootCommand("todo")
             {
                 add,
                 addm,
@@ -293,6 +357,7 @@ namespace Alteridem.Todo
             };
 
             root.AddOption(new Option<bool>("-a", "Don't auto-archive tasks automatically on completion"));
+            root.AddOption(new Option<string>("-d", "Use a configuration file other than the default ~/.todo/config"));
             root.AddOption(new Option<bool>("-t", "Prepend the current date to a task automatically when it's added."));
 
             return root;

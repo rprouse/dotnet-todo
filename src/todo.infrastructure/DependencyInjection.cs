@@ -11,14 +11,13 @@ namespace Alteridem.Todo.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, string configFile)
         {
             services.AddTransient<ITaskFile, TaskFile>();
             services.AddSingleton<ITaskConfiguration, TaskConfiguration>((_) =>
             {
                 try
                 {
-                    string configFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".todo.json");
                     if (File.Exists(configFile))
                     {
                         var options = new JsonSerializerOptions
@@ -36,7 +35,7 @@ namespace Alteridem.Todo.Infrastructure
                 }
                 catch (Exception ex)
                 {
-                    ColorConsole.WriteLine("Error reading .todo.json, using default configuration".Red());
+                    ColorConsole.WriteLine("Error reading configuration file. Using default configuration".Red());
                     ColorConsole.WriteLine(ex.Message.Red());
                     Console.WriteLine();
                 }

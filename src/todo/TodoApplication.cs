@@ -299,6 +299,7 @@ namespace Alteridem.Todo
             });
 
             var listall = new Command("listall", "Displays all the lines in todo.txt AND done.txt that contain TERM(s) sorted by priority with line numbers. Hides all tasks that contain TERM(s) preceded by a minus sign(i.e. -TERM). If no TERM specified, lists entire todo.txt AND done.txt concatenated and sorted.");
+            listall.AddAlias("lsa");
             listall.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
             listall.Handler = CommandHandler.Create(async (string[] terms, string d) =>
             {
@@ -307,6 +308,7 @@ namespace Alteridem.Todo
             });
 
             var listcon = new Command("listcon", "Lists all the task contexts that start with the @ sign in todo.txt. If TERM specified, considers only tasks that contain TERM(s).");
+            listcon.AddAlias("lsc");
             listcon.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
             listcon.Handler = CommandHandler.Create(async (string[] terms, string d) =>
             {
@@ -315,6 +317,7 @@ namespace Alteridem.Todo
             });
 
             var listfile = new Command("listfile", "Displays all tasks that contain TERM(s) sorted by priority with line numbers. Each task must match all TERM(s) (logical AND). Hides all tasks that contain TERM(s) preceded by a minus sign (i.e. -TERM).");
+            listfile.AddAlias("lf");
             listfile.AddArgument(new Argument<string>("filename"));
             listfile.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
             listfile.Handler = CommandHandler.Create(async (string filename, string[] terms, string d) =>
@@ -324,6 +327,7 @@ namespace Alteridem.Todo
             });
 
             var listproj = new Command("listproj", "Lists all the projects (terms that start with a + sign) in todo.txt. If TERM specified, considers only tasks that contain TERM(s).");
+            listproj.AddAlias("lspj");
             listproj.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
             listproj.Handler = CommandHandler.Create(async (string[] terms, string d) =>
             {
@@ -332,6 +336,7 @@ namespace Alteridem.Todo
             });
 
             var pri = new Command("pri", "Adds PRIORITY to task on line ITEM#. If the task is already prioritized, replaces current priority with new PRIORITY. PRIORITY must be a letter between A and Z.");
+            pri.AddAlias("p");
             pri.AddArgument(new Argument<int>("item"));
             pri.AddArgument(new Argument<char>("priority"));
             pri.Handler = CommandHandler.Create(async (int item, char priority, string d) =>

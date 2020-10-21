@@ -8,6 +8,7 @@ using Alteridem.Todo.Application;
 using Alteridem.Todo.Application.Commands.Add;
 using Alteridem.Todo.Application.Commands.Archive;
 using Alteridem.Todo.Application.Commands.Delete;
+using Alteridem.Todo.Application.Commands.Deprioritize;
 using Alteridem.Todo.Application.Commands.Do;
 using Alteridem.Todo.Application.Commands.Priority;
 using Alteridem.Todo.Application.Queries.IndividualTask;
@@ -42,7 +43,7 @@ namespace Alteridem.Todo
 
         private void Configure(string configFile)
         {
-            if (!File.Exists(configFile))
+            if (configFile != null && !File.Exists(configFile))
             {
                 ColorConsole.WriteLine($"{configFile} does not exist.".Red());
                 ColorConsole.WriteLine("Using default configuration.".Red());
@@ -148,6 +149,17 @@ namespace Alteridem.Todo
                 var command = new DeleteTaskCommand { ItemNumber = task.LineNumber };
                 var result = await Mediator.Send(command);
                 Console.WriteLine($"TODO: {result} deleted.");
+            }
+        }
+
+        private async Task Deprioritize(int[] items)
+        {
+            var command = new DeprioritizeCommand { ItemNumbers = items };
+            var result = await Mediator.Send(command);
+            foreach(var task in result)
+            {
+                Console.WriteLine(task.ToString(true));
+                Console.WriteLine($"TODO: {task.LineNumber} deprioritized.");
             }
         }
 
@@ -281,6 +293,15 @@ namespace Alteridem.Todo
                 await Delete(item, term);
             });
 
+            var depri = new Command("depri", "Deprioritizes (removes the priority) from the task(s) on line ITEM# in todo.txt.");
+            depri.AddAlias("dp");
+            depri.AddArgument(new Argument<int[]>("items", () => new int[] { }));
+            depri.Handler = CommandHandler.Create(async (int[] items, string d) => 
+            {
+                Configure(d);
+                await Deprioritize(items);
+            });
+
             var @do = new Command("do", "Marks task(s) on line ITEM# as done in todo.txt.");
             @do.AddArgument(new Argument<int[]>("items", () => new int[] { }));
             @do.Handler = CommandHandler.Create(async (int[] items, bool a, string d) =>
@@ -299,6 +320,7 @@ namespace Alteridem.Todo
             });
 
             var listall = new Command("listall", "Displays all the lines in todo.txt AND done.txt that contain TERM(s) sorted by priority with line numbers. Hides all tasks that contain TERM(s) preceded by a minus sign(i.e. -TERM). If no TERM specified, lists entire todo.txt AND done.txt concatenated and sorted.");
+            listall.AddAlias("lsa");
             listall.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
             listall.Handler = CommandHandler.Create(async (string[] terms, string d) =>
             {
@@ -307,6 +329,7 @@ namespace Alteridem.Todo
             });
 
             var listcon = new Command("listcon", "Lists all the task contexts that start with the @ sign in todo.txt. If TERM specified, considers only tasks that contain TERM(s).");
+            listcon.AddAlias("lsc");
             listcon.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
             listcon.Handler = CommandHandler.Create(async (string[] terms, string d) =>
             {
@@ -315,6 +338,7 @@ namespace Alteridem.Todo
             });
 
             var listfile = new Command("listfile", "Displays all tasks that contain TERM(s) sorted by priority with line numbers. Each task must match all TERM(s) (logical AND). Hides all tasks that contain TERM(s) preceded by a minus sign (i.e. -TERM).");
+            listfile.AddAlias("lf");
             listfile.AddArgument(new Argument<string>("filename"));
             listfile.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
             listfile.Handler = CommandHandler.Create(async (string filename, string[] terms, string d) =>
@@ -324,6 +348,7 @@ namespace Alteridem.Todo
             });
 
             var listproj = new Command("listproj", "Lists all the projects (terms that start with a + sign) in todo.txt. If TERM specified, considers only tasks that contain TERM(s).");
+            listproj.AddAlias("lspj");
             listproj.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
             listproj.Handler = CommandHandler.Create(async (string[] terms, string d) =>
             {
@@ -332,6 +357,7 @@ namespace Alteridem.Todo
             });
 
             var pri = new Command("pri", "Adds PRIORITY to task on line ITEM#. If the task is already prioritized, replaces current priority with new PRIORITY. PRIORITY must be a letter between A and Z.");
+            pri.AddAlias("p");
             pri.AddArgument(new Argument<int>("item"));
             pri.AddArgument(new Argument<char>("priority"));
             pri.Handler = CommandHandler.Create(async (int item, char priority, string d) =>
@@ -347,6 +373,7 @@ namespace Alteridem.Todo
                 addTo,
                 archive,
                 delete,
+                depri,
                 @do,
                 list,
                 listall,

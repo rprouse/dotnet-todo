@@ -68,14 +68,14 @@ work, but that is minor. I may add `listcon` and `listpri` commands in the futur
 
 If anyone has a proper workaround, please file an issue and I will update this.
 
+Also note, that unlike the shell script version, quotes are required around any strings with spaces.
+
 ## Actions
 
 ### `add`
 Adds "THING I NEED TO DO" to your todo.txt file on its own line.  
 
 Project and context notation optional.  
-
-Quotes required.
 
 ```shell
 todo add "THING I NEED TO DO +project @context"
@@ -103,8 +103,6 @@ todo addto DEST "TEXT TO ADD"
 
 ### `append`
 Adds TEXT TO APPEND to the end of the task on line ITEM#.
-
-Quotes optional.
 
 ```shell
 todo append ITEM# "TEXT TO APPEND"

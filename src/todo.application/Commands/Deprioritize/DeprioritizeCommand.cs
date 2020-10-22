@@ -8,12 +8,12 @@ using MediatR;
 
 namespace Alteridem.Todo.Application.Commands.Deprioritize
 {
-    public class DeprioritizeCommand : IRequest<IList<TaskItem>>
+    public sealed class DeprioritizeCommand : IRequest<IList<TaskItem>>
     {
         public int[] ItemNumbers { get; set; }
     }
 
-    public class DeprioritizeCommandHandler : IRequestHandler<DeprioritizeCommand, IList<TaskItem>>
+    public sealed class DeprioritizeCommandHandler : IRequestHandler<DeprioritizeCommand, IList<TaskItem>>
     {
         private readonly ITaskFile _taskFile;
         private readonly ITaskConfiguration _config;

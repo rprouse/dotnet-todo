@@ -104,7 +104,7 @@ namespace Alteridem.Todo
             var command = new AppendCommand { ItemNumber = item, Text = text };
             var result = await Mediator.Send(command);
 
-            if(result is null)
+            if (result is null)
                 Console.WriteLine($"TODO: No task {item}.");
             else
                 Console.WriteLine(result.ToString(true));
@@ -174,32 +174,38 @@ namespace Alteridem.Todo
         {
             var command = new DeprioritizeCommand { ItemNumbers = items };
             var result = await Mediator.Send(command);
-            foreach(var task in result)
+            foreach (var task in result)
             {
                 Console.WriteLine(task.ToString(true));
                 Console.WriteLine($"TODO: {task.LineNumber} deprioritized.");
             }
         }
 
-        private async Task List(string[] terms)
+        private async Task List(string[] terms, bool plain)
         {
             var query = new ListTasksQuery { Filename = Configuration.TodoFile, Terms = terms };
             var result = await Mediator.Send(query);
             foreach (var task in result.Tasks)
             {
-                ColorConsole.WriteLine(task.ToColorString(true, Configuration).ToColorTokens());
+                if (plain)
+                    Console.WriteLine(task.ToColorString(true, Configuration).ToPlainString());
+                else
+                    ColorConsole.WriteLine(task.ToColorString(true, Configuration).ToColorTokens());
             }
             Console.WriteLine("--");
             Console.WriteLine($"TODO: {result.Tasks.Count} of {result.TotalTasks} tasks shown");
         }
 
-        private async Task ListAll(string[] terms)
+        private async Task ListAll(string[] terms, bool plain)
         {
             var query = new ListAllQuery { Terms = terms };
             var result = await Mediator.Send(query);
             foreach (var task in result.Tasks)
             {
-                ColorConsole.WriteLine(task.ToColorString(true, Configuration).ToColorTokens());
+                if (plain)
+                    Console.WriteLine(task.ToColorString(true, Configuration).ToPlainString());
+                else
+                    ColorConsole.WriteLine(task.ToColorString(true, Configuration).ToColorTokens());
             }
             Console.WriteLine("--");
             Console.WriteLine($"TODO: {result.ShownTasks} of {result.TotalTasks} tasks shown");
@@ -215,25 +221,31 @@ namespace Alteridem.Todo
                 Console.WriteLine(context);
         }
 
-        private async Task ListFile(string filename, string[] terms)
+        private async Task ListFile(string filename, string[] terms, bool plain)
         {
             var query = new ListTasksQuery { Filename = filename, Terms = terms };
             var result = await Mediator.Send(query);
             foreach (var task in result.Tasks)
             {
-                ColorConsole.WriteLine(task.ToColorString(true, Configuration).ToColorTokens());
+                if (plain)
+                    Console.WriteLine(task.ToColorString(true, Configuration).ToPlainString());
+                else
+                    ColorConsole.WriteLine(task.ToColorString(true, Configuration).ToColorTokens());
             }
             Console.WriteLine("--");
             Console.WriteLine($"{filename.ToUpper()}: {result.Tasks.Count} of {result.TotalTasks} tasks shown");
         }
 
-        private async Task ListPriorities(string priorities, string[] terms)
+        private async Task ListPriorities(string priorities, string[] terms, bool plain)
         {
             var query = new ListPriorityQuery { Priorities = priorities, Terms = terms };
             var result = await Mediator.Send(query);
             foreach (var task in result.Tasks)
             {
-                ColorConsole.WriteLine(task.ToColorString(true, Configuration).ToColorTokens());
+                if (plain)
+                    Console.WriteLine(task.ToColorString(true, Configuration).ToPlainString());
+                else
+                    ColorConsole.WriteLine(task.ToColorString(true, Configuration).ToColorTokens());
             }
             Console.WriteLine("--");
             Console.WriteLine($"TODO: {result.Tasks.Count} of {result.TotalTasks} tasks shown");
@@ -363,7 +375,7 @@ namespace Alteridem.Todo
             var depri = new Command("depri", "Deprioritizes (removes the priority) from the task(s) on line ITEM# in todo.txt.");
             depri.AddAlias("dp");
             depri.AddArgument(new Argument<int[]>("items", () => new int[] { }));
-            depri.Handler = CommandHandler.Create(async (int[] items, string d) => 
+            depri.Handler = CommandHandler.Create(async (int[] items, string d) =>
             {
                 Configure(d);
                 await Deprioritize(items);
@@ -380,19 +392,19 @@ namespace Alteridem.Todo
             var list = new Command("list", "Displays all tasks that contain TERM(s) sorted by priority with line numbers. Each task must match all TERM(s) (logical AND). Hides all tasks that contain TERM(s) preceded by a minus sign (i.e. -TERM).");
             list.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
             list.AddAlias("ls");
-            list.Handler = CommandHandler.Create(async (string[] terms, string d) =>
+            list.Handler = CommandHandler.Create(async (string[] terms, string d, bool p) =>
             {
                 Configure(d);
-                await List(terms);
+                await List(terms, p);
             });
 
             var listall = new Command("listall", "Displays all the lines in todo.txt AND done.txt that contain TERM(s) sorted by priority with line numbers. Hides all tasks that contain TERM(s) preceded by a minus sign(i.e. -TERM). If no TERM specified, lists entire todo.txt AND done.txt concatenated and sorted.");
             listall.AddAlias("lsa");
             listall.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
-            listall.Handler = CommandHandler.Create(async (string[] terms, string d) =>
+            listall.Handler = CommandHandler.Create(async (string[] terms, string d, bool p) =>
             {
                 Configure(d);
-                await ListAll(terms);
+                await ListAll(terms, p);
             });
 
             var listcon = new Command("listcon", "Lists all the task contexts that start with the @ sign in todo.txt. If TERM specified, considers only tasks that contain TERM(s).");
@@ -408,20 +420,20 @@ namespace Alteridem.Todo
             listfile.AddAlias("lf");
             listfile.AddArgument(new Argument<string>("filename"));
             listfile.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
-            listfile.Handler = CommandHandler.Create(async (string filename, string[] terms, string d) =>
+            listfile.Handler = CommandHandler.Create(async (string filename, string[] terms, string d, bool p) =>
             {
                 Configure(d);
-                await ListFile(filename, terms);
+                await ListFile(filename, terms, p);
             });
 
             var listpri = new Command("listpri", "Displays all tasks prioritized PRIORITIES. PRIORITIES can be a single one (A) or a range (A-C). If no PRIORITIES specified, lists all prioritized tasks. If TERM specified, lists only prioritized tasks that contain TERM(s). Hides all tasks that contain TERM(s) preceded by a minus sign(i.e. -TERM).");
             listpri.AddAlias("lsp");
             listpri.AddArgument(new Argument<string>("priorities", () => "A-Z"));
             listpri.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
-            listpri.Handler = CommandHandler.Create(async (string priorities, string[] terms, string d) =>
+            listpri.Handler = CommandHandler.Create(async (string priorities, string[] terms, string d, bool p) =>
             {
                 Configure(d);
-                await ListPriorities(priorities, terms);
+                await ListPriorities(priorities, terms, p);
             });
 
             var listproj = new Command("listproj", "Lists all the projects (terms that start with a + sign) in todo.txt. If TERM specified, considers only tasks that contain TERM(s).");
@@ -486,6 +498,7 @@ namespace Alteridem.Todo
             root.AddOption(new Option<bool>("-a", "Don't auto-archive tasks automatically on completion"));
             root.AddOption(new Option<string>("-d", "Use a configuration file other than the default ~/.todo/config"));
             root.AddOption(new Option<bool>("-f", "Forces actions without confirmation or interactive input."));
+            root.AddOption(new Option<bool>("-p", "Plain mode turns off colors"));
             root.AddOption(new Option<bool>("-t", "Prepend the current date to a task automatically when it's added."));
 
             return root;

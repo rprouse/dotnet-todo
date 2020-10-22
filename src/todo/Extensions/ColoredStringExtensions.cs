@@ -12,5 +12,8 @@ namespace Alteridem.Todo.Extensions
 
         public static ColorToken[] ToColorTokens(this IEnumerable<ColoredString> coloredStrings) =>
             coloredStrings.Select(cs => cs.ToColorToken()).ToArray();
+
+        public static string ToPlainString(this IEnumerable<ColoredString> coloredStrings) =>
+            string.Join(null, coloredStrings.Select(c => c.Text));
     }
 }

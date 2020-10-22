@@ -2,7 +2,7 @@
   "profiles": {
     "todo": {
       "commandName": "Project",
-      "commandLineArgs": "replace 12 \"(A) priority\""
+      "commandLineArgs": "ls"
     }
   }
 }

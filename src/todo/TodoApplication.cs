@@ -122,7 +122,7 @@ namespace Alteridem.Todo
             Console.WriteLine($"TODO: {result.Count} tasks archived.");
         }
 
-        private async Task Delete(int item, string term)
+        private async Task Delete(int item, string term, bool force)
         {
             var query = new TaskQuery { ItemNumber = item };
             var queryResult = await Mediator.Send(query);
@@ -133,7 +133,7 @@ namespace Alteridem.Todo
             }
 
             if (string.IsNullOrWhiteSpace(term))
-                await DeleteTask(queryResult);
+                await DeleteTask(queryResult, force);
             else
                 await DeleteTerm(queryResult, term);
         }
@@ -154,16 +154,20 @@ namespace Alteridem.Todo
             }
         }
 
-        private async Task DeleteTask(TaskItem task)
+        private async Task DeleteTask(TaskItem task, bool force)
         {
-            Console.WriteLine($"Delete '{task.Text}'? (y/n)");
-            var key = Console.ReadKey();
-            if (key.KeyChar == 'y' || key.KeyChar == 'Y')
+            if (!force)
             {
-                var command = new DeleteTaskCommand { ItemNumber = task.LineNumber };
-                var result = await Mediator.Send(command);
-                Console.WriteLine($"TODO: {result} deleted.");
+                Console.WriteLine($"Delete '{task.Text}'? (y/n)");
+                var key = Console.ReadKey();
+                if (key.KeyChar != 'y' && key.KeyChar != 'Y')
+                {
+                    return;
+                }
             }
+            var command = new DeleteTaskCommand { ItemNumber = task.LineNumber };
+            var result = await Mediator.Send(command);
+            Console.WriteLine($"TODO: {result} deleted.");
         }
 
         private async Task Deprioritize(int[] items)
@@ -347,13 +351,13 @@ namespace Alteridem.Todo
             });
 
             var delete = new Command("delete", "Deletes the task on line ITEM# in todo.txt. If TERM specifiedeletes only TERM from the task.");
-            delete.AddArgument(new Argument<int[]>("item"));
+            delete.AddArgument(new Argument<int>("item"));
             delete.AddArgument(new Argument<string>("term", () => null));
             delete.AddAlias("rm");
-            delete.Handler = CommandHandler.Create(async (int item, string term, string d) =>
+            delete.Handler = CommandHandler.Create(async (int item, string term, bool f, string d) =>
             {
                 Configure(d);
-                await Delete(item, term);
+                await Delete(item, term, f);
             });
 
             var depri = new Command("depri", "Deprioritizes (removes the priority) from the task(s) on line ITEM# in todo.txt.");
@@ -481,6 +485,7 @@ namespace Alteridem.Todo
 
             root.AddOption(new Option<bool>("-a", "Don't auto-archive tasks automatically on completion"));
             root.AddOption(new Option<string>("-d", "Use a configuration file other than the default ~/.todo/config"));
+            root.AddOption(new Option<bool>("-f", "Forces actions without confirmation or interactive input."));
             root.AddOption(new Option<bool>("-t", "Prepend the current date to a task automatically when it's added."));
 
             return root;

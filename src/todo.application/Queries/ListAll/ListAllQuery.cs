@@ -45,7 +45,7 @@ namespace Alteridem.Todo.Application.Queries.List
                     doneSearch = doneSearch.Where(t => t.Description.Contains(term));
                 }
             }
-            taskSearch = taskSearch.OrderBy(t => t.Priority ?? '[');
+            taskSearch = taskSearch.OrderBy(t => t.Priority ?? '[').ThenBy(t => t.Completed);
 
             var all = taskSearch.ToList();
             all.AddRange(doneSearch.ToList());

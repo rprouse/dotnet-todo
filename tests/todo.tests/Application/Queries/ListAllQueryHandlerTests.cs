@@ -23,11 +23,11 @@ namespace Alteridem.Todo.Tests.Application.Queries
             _taskFile.TaskLines = new List<string>
            {
                "2020-10-16 This is something to do!",
+               "x This is complete @context",
                "2020-10-16 This is something to do with @context and a +project!",
                "(A) This is high priority",
                "",
                "(D) This is lower",
-               "(B) This is in between with @context",
                "(Z) Very low priority with +project",
                "(E) Midrange",
            };
@@ -57,6 +57,14 @@ namespace Alteridem.Todo.Tests.Application.Queries
             result.ShownDone.Should().Be(2);
             result.TotalTasks.Should().Be(7);
             result.TotalDone.Should().Be(2);
+        }
+
+        [Test]
+        public async Task ListAllQueryHandler_SortsCompletedTasksLast()
+        {
+            var command = new ListAllQuery { Terms = null };
+            ListAllResponse result = await _handler.Handle(command, new CancellationToken());
+            result.Tasks[6].Text.Should().Be("x This is complete @context");
         }
 
         [Test]

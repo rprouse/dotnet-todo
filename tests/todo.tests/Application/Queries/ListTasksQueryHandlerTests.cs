@@ -23,7 +23,7 @@ namespace Alteridem.Todo.Tests.Application.Queries
             _taskFile = new TaskFileMock();
             _taskFile.TaskLines = new List<string>
             {
-                "2020-10-16 This is something to do!",
+                "x 2020-10-16 This is something to do!",
                 "2020-10-16 This is something to do with @context and a +project!",
                 "(A) This is high priority",
                 "",
@@ -53,7 +53,7 @@ namespace Alteridem.Todo.Tests.Application.Queries
             var command = new ListTasksQuery { Filename = _config.TodoFile, Terms = null };
             ListTasksResponse result = await _handler.Handle(command, new CancellationToken());
             result.Tasks.First().Text.Should().Be("(A) This is high priority");
-            result.Tasks.Last().Text.Should().Be("2020-10-16 This is something to do with @context and a +project!");
+            result.Tasks.Last().Text.Should().Be("x 2020-10-16 This is something to do!");
         }
 
         [Test]

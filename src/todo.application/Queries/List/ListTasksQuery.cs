@@ -37,7 +37,7 @@ namespace Alteridem.Todo.Application.Queries.List
                 else
                     search = search.Where(t => t.Description.Contains(term));
             }
-            search = search.OrderBy(t => t.Priority ?? '[');
+            search = search.OrderBy(t => t.Priority ?? '[').ThenBy(t => t.Completed);
 
             return Task.FromResult(new ListTasksResponse { Tasks = search.ToList(), TotalTasks = tasks.Count });
         }

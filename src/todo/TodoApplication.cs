@@ -6,11 +6,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Alteridem.Todo.Application;
 using Alteridem.Todo.Application.Commands.Add;
+using Alteridem.Todo.Application.Commands.Append;
 using Alteridem.Todo.Application.Commands.Archive;
 using Alteridem.Todo.Application.Commands.Delete;
 using Alteridem.Todo.Application.Commands.Deprioritize;
 using Alteridem.Todo.Application.Commands.Do;
+using Alteridem.Todo.Application.Commands.Prepend;
 using Alteridem.Todo.Application.Commands.Priority;
+using Alteridem.Todo.Application.Commands.Replace;
 using Alteridem.Todo.Application.Queries.IndividualTask;
 using Alteridem.Todo.Application.Queries.List;
 using Alteridem.Todo.Application.Queries.ListContexts;
@@ -94,6 +97,17 @@ namespace Alteridem.Todo
 
             Console.WriteLine(task.ToString());
             Console.WriteLine($"TODO: {task.LineNumber} added to {filename}.");
+        }
+
+        private async Task Append(int item, string text)
+        {
+            var command = new AppendCommand { ItemNumber = item, Text = text };
+            var result = await Mediator.Send(command);
+
+            if(result is null)
+                Console.WriteLine($"TODO: No task {item}.");
+            else
+                Console.WriteLine(result.ToString(true));
         }
 
         private async Task Archive(string configFile)
@@ -229,6 +243,33 @@ namespace Alteridem.Todo
                 Console.WriteLine(project);
         }
 
+        private async Task Prepend(int item, string text)
+        {
+            var command = new PrependCommand { ItemNumber = item, Text = text };
+            var result = await Mediator.Send(command);
+
+            if (result is null)
+                Console.WriteLine($"TODO: No task {item}.");
+            else
+                Console.WriteLine(result.ToString(true));
+        }
+
+        private async Task Replace(int item, string text)
+        {
+            var command = new ReplaceCommand { ItemNumber = item, Text = text };
+            var result = await Mediator.Send(command);
+
+            if (result is null)
+            {
+                Console.WriteLine($"TODO: No task {item}.");
+            }
+            else
+            {
+                Console.WriteLine("TODO: Replaced task with:");
+                Console.WriteLine(result.ToString(true));
+            }
+        }
+
         private async Task Complete(int[] items, bool dontArchive)
         {
             var command = new DoTasksCommand { ItemNumbers = items, DontArchive = dontArchive };
@@ -286,6 +327,16 @@ namespace Alteridem.Todo
             {
                 Configure(d);
                 await AddTo(filename, task, t);
+            });
+
+            var append = new Command("append", "Adds TEXT TO APPEND to the end of the task on line ITEM#.");
+            append.AddArgument(new Argument<int>("item"));
+            append.AddArgument(new Argument<string>("text"));
+            append.AddAlias("app");
+            append.Handler = CommandHandler.Create(async (int item, string text, string d) =>
+            {
+                Configure(d);
+                await Append(item, text);
             });
 
             var archive = new Command("archive", "Moves all done tasks from todo.txt to done.txt and removes blank lines.");
@@ -378,6 +429,16 @@ namespace Alteridem.Todo
                 await ListProjects(terms);
             });
 
+            var prepend = new Command("prepend", "Adds TEXT TO PREPEND to the beginning of the task on line ITEM#.");
+            prepend.AddArgument(new Argument<int>("item"));
+            prepend.AddArgument(new Argument<string>("text"));
+            prepend.AddAlias("prep");
+            prepend.Handler = CommandHandler.Create(async (int item, string text, string d) =>
+            {
+                Configure(d);
+                await Prepend(item, text);
+            });
+
             var pri = new Command("pri", "Adds PRIORITY to task on line ITEM#. If the task is already prioritized, replaces current priority with new PRIORITY. PRIORITY must be a letter between A and Z.");
             pri.AddAlias("p");
             pri.AddArgument(new Argument<int>("item"));
@@ -388,11 +449,21 @@ namespace Alteridem.Todo
                 await AddPriority(item, priority);
             });
 
+            var replace = new Command("replace", "Replaces task on line ITEM# with UPDATED TODO.");
+            replace.AddArgument(new Argument<int>("item"));
+            replace.AddArgument(new Argument<string>("text"));
+            replace.Handler = CommandHandler.Create(async (int item, string text, string d) =>
+            {
+                Configure(d);
+                await Replace(item, text);
+            });
+
             var root = new RootCommand("todo")
             {
                 add,
                 addm,
                 addTo,
+                append,
                 archive,
                 delete,
                 depri,
@@ -403,7 +474,9 @@ namespace Alteridem.Todo
                 listfile,
                 listpri,
                 listproj,
-                pri
+                prepend,
+                pri,
+                replace
             };
 
             root.AddOption(new Option<bool>("-a", "Don't auto-archive tasks automatically on completion"));

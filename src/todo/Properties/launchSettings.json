@@ -2,7 +2,7 @@
   "profiles": {
     "todo": {
       "commandName": "Project",
-      "commandLineArgs": "ls"
+      "commandLineArgs": "--help"
     }
   }
 }

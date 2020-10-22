@@ -474,7 +474,7 @@ namespace Alteridem.Todo
                 await Replace(item, text);
             });
 
-            var root = new RootCommand("todo")
+            var root = new RootCommand("todo is a .NET command line port of the Todo.txt shell script from http://todotxt.org/ that tries to remain faithful to the command line and functionality of the original shell script wherever possible. Written by Rob Prouse.")
             {
                 add,
                 addm,

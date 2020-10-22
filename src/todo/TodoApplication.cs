@@ -14,12 +14,12 @@ using Alteridem.Todo.Application.Commands.Priority;
 using Alteridem.Todo.Application.Queries.IndividualTask;
 using Alteridem.Todo.Application.Queries.List;
 using Alteridem.Todo.Application.Queries.ListContexts;
+using Alteridem.Todo.Application.Queries.ListPriority;
 using Alteridem.Todo.Application.Queries.ListProjects;
 using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using Alteridem.Todo.Extensions;
 using Alteridem.Todo.Infrastructure;
-using Alteridem.Todo.Infrastructure.Persistence;
 using ColoredConsole;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -209,6 +209,18 @@ namespace Alteridem.Todo
             Console.WriteLine($"{filename.ToUpper()}: {result.Tasks.Count} of {result.TotalTasks} tasks shown");
         }
 
+        private async Task ListPriorities(string priorities, string[] terms)
+        {
+            var query = new ListPriorityQuery { Priorities = priorities, Terms = terms };
+            var result = await Mediator.Send(query);
+            foreach (var task in result.Tasks)
+            {
+                ColorConsole.WriteLine(task.ToColorString(true, Configuration).ToColorTokens());
+            }
+            Console.WriteLine("--");
+            Console.WriteLine($"TODO: {result.Tasks.Count} of {result.TotalTasks} tasks shown");
+        }
+
         private async Task ListProjects(string[] terms)
         {
             var query = new ListProjectsQuery { Terms = terms };
@@ -347,6 +359,16 @@ namespace Alteridem.Todo
                 await ListFile(filename, terms);
             });
 
+            var listpri = new Command("listpri", "Displays all tasks prioritized PRIORITIES. PRIORITIES can be a single one (A) or a range (A-C). If no PRIORITIES specified, lists all prioritized tasks. If TERM specified, lists only prioritized tasks that contain TERM(s). Hides all tasks that contain TERM(s) preceded by a minus sign(i.e. -TERM).");
+            listpri.AddAlias("lsp");
+            listpri.AddArgument(new Argument<string>("priorities", () => "A-Z"));
+            listpri.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
+            listpri.Handler = CommandHandler.Create(async (string priorities, string[] terms, string d) =>
+            {
+                Configure(d);
+                await ListPriorities(priorities, terms);
+            });
+
             var listproj = new Command("listproj", "Lists all the projects (terms that start with a + sign) in todo.txt. If TERM specified, considers only tasks that contain TERM(s).");
             listproj.AddAlias("lspj");
             listproj.AddArgument(new Argument<string[]>("terms", () => new string[] { }));
@@ -379,6 +401,7 @@ namespace Alteridem.Todo
                 listall,
                 listcon,
                 listfile,
+                listpri,
                 listproj,
                 pri
             };

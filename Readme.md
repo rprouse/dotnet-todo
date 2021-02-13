@@ -2,7 +2,7 @@
 
 `dotnet-todo` is a .NET command line port of [Todo.txt](http://todotxt.org/) that tries to
 remain faithful to the command line and functionality of the original shell script wherever
-possible. As such, the [usage](#usage) below is a modified copy of the 
+possible. As such, the [usage](#usage) below is a modified copy of the
 [original on GitHub](https://github.com/todotxt/todo.txt-cli/blob/master/USAGE.md).
 
 - [Installation](#installation)
@@ -13,12 +13,12 @@ possible. As such, the [usage](#usage) below is a modified copy of the
 
 ## Installation
 
-This program uses [.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0) which is still
-in preview. You must download the .NET 5.0 SDK to install, and if you want to develop for this
-application, you must use at least [Visual Studio 2019 v16.8 Preview 4](https://visualstudio.microsoft.com/vs/preview/).
+This program is a [dotnet tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) and requires the latest version of
+the [.NET SDK](https://dotnet.microsoft.com/download) to be installed. .NET 5.0 or newer is recommended.
 
-This program is a [dotnet tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools). 
-Build it, then package it using the **Pack** command in Visual Studio or `dotnet pack` 
+### Testing Locally
+
+Build it, then package it using the **Pack** command in Visual Studio or `dotnet pack`
 on the command line. Until this package is published, install it using the following
 command line from the solution root;
 
@@ -32,10 +32,49 @@ To update from a previous version,
 dotnet tool update -g --add-source .\src\todo\nupkg\ dotnet-todo
 ```
 
+### Installing from GitHub Packages
+
+Whenever the version is updated in `src/todo/todo.csproj`, a merge to master will publish the NuGet package
+to [GitHub Packages](https://github.com/rprouse?tab=packages). You can install or update from there.
+
+First you must update your global NuGet configuration to add the package registry and include the GitHub Personal
+Access Token (PAT). This file is in `%appdata%\NuGet\NuGet.Config` on Windows and in `~/.config/NuGet/NuGet.Config`
+or `~/.nuget/NuGet/NuGet.Config` on Linux/Mac.
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
+    <add key="Local" value="C:\temp" />
+    <add key="Microsoft Visual Studio Offline Packages" value="C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\" />
+    <add key="github" value="https://nuget.pkg.github.com/rprouse/index.json" />
+  </packageSources>
+  <packageSourceCredentials>
+    <github>
+      <add key="Username" value="rprouse" />
+      <add key="ClearTextPassword" value="GITHUB_PAT" />
+    </github>
+  </packageSourceCredentials>
+</configuration>
+```
+
+Once that is done, to install,
+
+```sh
+dotnet tool install -g dotnet-todo
+```
+
+And to update from a previous version,
+
+```sh
+dotnet tool update -g dotnet-todo
+```
+
 ### Enabling Tab Completion
 
 This program supports tab completion using `dotnet-suggest`. To enable, for each shell
-you must install the `dotnet-suggest` global tool and adding a shim to your profile. This 
+you must install the `dotnet-suggest` global tool and adding a shim to your profile. This
 only needs to be done once and work for all applications built using `System.CommandLine`.
 
 Follow the [setup instructions](https://github.com/dotnet/command-line-api/blob/main/docs/dotnet-suggest.md)
@@ -73,9 +112,9 @@ Also note, that unlike the shell script version, quotes are required around any 
 ## Actions
 
 ### `add`
-Adds "THING I NEED TO DO" to your todo.txt file on its own line.  
+Adds "THING I NEED TO DO" to your todo.txt file on its own line.
 
-Project and context notation optional.  
+Project and context notation optional.
 
 ```shell
 todo add "THING I NEED TO DO +project @context"
@@ -92,7 +131,7 @@ Project and context notation optional.
 todo addm "FIRST THING I NEED TO DO +project1 @context" "SECOND THING I NEED TO DO +project2 @context"
 ```
 
-### `addto`      
+### `addto`
 Adds a line of text to any file located in the todo.txt directory.
 
 For example, `addto inbox.txt "decide about vacation"`
@@ -124,7 +163,7 @@ todo deduplicate
 ```
 
 ### `del`
-Deletes the task on line ITEM# in todo.txt. If TERM specified, deletes only 
+Deletes the task on line ITEM# in todo.txt. If TERM specified, deletes only
 TERM from the task.
 
 ```shell
@@ -148,7 +187,7 @@ todo do ITEM#[, ITEM#, ITEM#, ...]
 ```
 
 ### `help`
-Display help about usage, options, built-in and add-on actions, or just the usage 
+Display help about usage, options, built-in and add-on actions, or just the usage
 help for the passed ACTION(s).
 
 ```shell
@@ -156,20 +195,20 @@ todo help [ACTION...]
 ```
 
 ### `list`
-Displays all tasks that contain TERM(s) sorted by priority with line numbers.  Each 
-task must match all TERM(s) (logical AND). Hides all tasks that contain TERM(s) 
-preceded by a minus sign (i.e. `-TERM`). 
+Displays all tasks that contain TERM(s) sorted by priority with line numbers.  Each
+task must match all TERM(s) (logical AND). Hides all tasks that contain TERM(s)
+preceded by a minus sign (i.e. `-TERM`).
 
 If no TERM specified, lists entire todo.txt.
-​    
+​
 ```shell
 todo list [TERM...]
 todo ls [TERM...]
 ```
 
 ### `listall`
-Displays all the lines in todo.txt AND done.txt that contain TERM(s) sorted by 
-priority with line  numbers. Hides all tasks that contain TERM(s) preceded by a 
+Displays all the lines in todo.txt AND done.txt that contain TERM(s) sorted by
+priority with line  numbers. Hides all tasks that contain TERM(s) preceded by a
 minus sign (i.e. `-TERM`).
 
 If no TERM specified, lists entire todo.txt AND done.txt concatenated and sorted.
@@ -190,8 +229,8 @@ todo lsc [TERM...]
 ```
 
 ### `listfile`
-Displays all the lines in SRC file located in the todo.txt directory, sorted by 
-priority with line numbers. If TERM specified, lists all lines that contain TERM(s) 
+Displays all the lines in SRC file located in the todo.txt directory, sorted by
+priority with line numbers. If TERM specified, lists all lines that contain TERM(s)
 in SRC file. Hides all tasks that contain TERM(s) preceded by a minus sign (i.e. `-TERM`).
 
 Without any arguments, the names of all text files in the todo.txt directory are listed.
@@ -202,9 +241,9 @@ todo lf [SRC [TERM...]]
 ```
 
 ### `listpri`
-Displays all tasks prioritized PRIORITIES. PRIORITIES can be a single one (A) or a range 
-(A-C). If no PRIORITIES specified, lists all prioritized tasks. If TERM specified, lists 
-only prioritized tasks that contain TERM(s). Hides all tasks that contain TERM(s) preceded 
+Displays all tasks prioritized PRIORITIES. PRIORITIES can be a single one (A) or a range
+(A-C). If no PRIORITIES specified, lists all prioritized tasks. If TERM specified, lists
+only prioritized tasks that contain TERM(s). Hides all tasks that contain TERM(s) preceded
 by a minus sign (i.e. `-TERM`).
 
 ```shell
@@ -213,7 +252,7 @@ todo lsp [PRIORITIES] [TERM...]
 ```
 
 ### `listproj`
-Lists all the projects (terms that start with a `+` sign) in todo.txt. If TERM specified, 
+Lists all the projects (terms that start with a `+` sign) in todo.txt. If TERM specified,
 considers only tasks that contain TERM(s).
 
 ```shell
@@ -222,8 +261,8 @@ todo lsprj [TERM...]
 ```
 
 ### `move`
-Moves a line from source text file (SRC) to destination text file (DEST). Both source 
-and destination file must be located in the directory defined in the configuration 
+Moves a line from source text file (SRC) to destination text file (DEST). Both source
+and destination file must be located in the directory defined in the configuration
 directory. When SRC is not defined it's by default todo.txt.
 
 ```shell
@@ -240,7 +279,7 @@ todo prep ITEM# "TEXT TO PREPEND"
 ```
 
 ### `pri`
-Adds PRIORITY to task on line ITEM#.  If the task is already prioritized, replaces 
+Adds PRIORITY to task on line ITEM#.  If the task is already prioritized, replaces
 current priority with new PRIORITY. PRIORITY must be a letter between A and Z.
 
 ```shell
@@ -291,11 +330,11 @@ by the original shell script. Instead, this program uses a JSON file called
 `~/.todo.json` in the user's home directory.
 
 The defaults for this file put the todo files in a `Todo` directory in the
-users `Documents` directory. 
+users `Documents` directory.
 
-Allowed colors are `black, blue, cyan, gray, green, magenta, red, white, 
-yellow, darkBlue, darkCyan, darkGray, darkGreen, darkMagenta, darkRed, 
-darkYellow`. Either omit or set any color to `null` to use the default 
+Allowed colors are `black, blue, cyan, gray, green, magenta, red, white,
+yellow, darkBlue, darkCyan, darkGray, darkGreen, darkMagenta, darkRed,
+darkYellow`. Either omit or set any color to `null` to use the default
 terminal color.
 
 You only need to add lines to `~/.todo.json` that you want to change.

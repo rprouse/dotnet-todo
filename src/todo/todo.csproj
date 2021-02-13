@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://github.com/rprouse/guppi</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rprouse/guppi</RepositoryUrl>
     <PackageId>dotnet-todo</PackageId>
-    <Version>0.3.2</Version>
+    <Version>0.3.3</Version>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>todo</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>

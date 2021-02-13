@@ -8,15 +8,17 @@
     <Authors>Rob Prouse</Authors>
     <Company>Alteridem Consulting</Company>
     <Product>Todo.txt command line utility</Product>
-    <Copyright>Copyright (c) 2020 Rob Prouse</Copyright>
+    <Copyright>Copyright (c) 2021 Rob Prouse</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/rprouse/guppi</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/rprouse/guppi</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/rprouse/dotnet-todo</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rprouse/dotnet-todo</RepositoryUrl>
     <PackageId>dotnet-todo</PackageId>
-    <Version>0.3.3</Version>
+    <Version>0.3.4</Version>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>todo</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
+    <RepositoryType>git</RepositoryType>
+    <Description>dotnet-todo is a .NET command line port of http://todotxt.org/ that tries to remain faithful to the command line and functionality of the original shell script wherever possible.</Description>
   </PropertyGroup>
 
   <ItemGroup>

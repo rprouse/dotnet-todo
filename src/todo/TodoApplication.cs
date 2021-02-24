@@ -496,7 +496,7 @@ namespace Alteridem.Todo
             };
 
             root.AddOption(new Option<bool>("-a", "Don't auto-archive tasks automatically on completion"));
-            root.AddOption(new Option<string>("-d", "Use a configuration file other than the default ~/.todo/config"));
+            root.AddOption(new Option<string>("-d", "Use a configuration file other than the default ~/.todo.json"));
             root.AddOption(new Option<bool>("-f", "Forces actions without confirmation or interactive input."));
             root.AddOption(new Option<bool>("-p", "Plain mode turns off colors"));
             root.AddOption(new Option<bool>("-t", "Prepend the current date to a task automatically when it's added."));

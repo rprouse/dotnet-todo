@@ -44,4 +44,4 @@ jobs:
           name: nupkg
 
       - name: Publish NuGet to GitHub Packages
-        run: dotnet nuget push "**/dotnet-todo.*.nupkg" -k ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/rprouse/index.json --skip-duplicate --no-symbols true
+        run: dotnet nuget push "**/dotnet-todo.*.nupkg" -k ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/rprouse/index.json --skip-duplicate --no-symbols

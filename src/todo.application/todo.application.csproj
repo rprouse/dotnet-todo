@@ -6,8 +6,7 @@
     <RootNamespace>Alteridem.Todo.Application</RootNamespace>
     <Company>Alteridem Consulting</Company>
     <Product>Todo.txt command line utility application library</Product>
-    <Copyright>Copyright (c) 2020 Rob Prouse</Copyright>
-    <Version>0.3.1</Version>
+    <Copyright>Copyright (c) 2022 Rob Prouse</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

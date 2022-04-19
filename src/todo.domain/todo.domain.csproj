@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>Todo.Domain</AssemblyName>
     <RootNamespace>Alteridem.Todo.Domain</RootNamespace>
     <Company>Alteridem Consulting</Company>
     <Product>Todo.txt command line utility domain library</Product>
-    <Copyright>Copyright (c) 2020 Rob Prouse</Copyright>
-    <Version>0.3.1</Version>
+    <Copyright>Copyright (c) 2022 Rob Prouse</Copyright>
   </PropertyGroup>
 
 </Project>

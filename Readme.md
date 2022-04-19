@@ -14,7 +14,7 @@ possible. As such, the [usage](#usage) below is a modified copy of the
 ## Installation
 
 This program is a [dotnet tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) and requires the latest version of
-the [.NET SDK](https://dotnet.microsoft.com/download) to be installed. .NET 5.0 or newer is recommended.
+the [.NET SDK](https://dotnet.microsoft.com/download) to be installed. .NET 6.0 or newer is required.
 
 ### Testing Locally
 

@@ -12,21 +12,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Install dependencies
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v3
+
+    - name: 💉 Install dependencies
       run: dotnet restore
 
-    - name: Build
+    - name: 🛠️ Build
       run: dotnet build --configuration Release --no-restore
 
-    - name: Test
+    - name: ✅ Test
       run: dotnet test --no-restore --verbosity normal
 
-    - name: Package NuGet
+    - name: 📦 Package NuGet
       run: dotnet pack --no-build --configuration Release
 
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
+    - name: 📤 Upload Artifacts
+      uses: actions/upload-artifact@v3
       with:
         name: nupkg
         path: src/todo/nupkg/*.nupkg
@@ -38,10 +40,13 @@ jobs:
     # only push nuget package for PRs merged to master
     if: github.ref == 'refs/heads/main'
     steps:
-      - name: Download Artifacts
-        uses: actions/download-artifact@v2
+      - name: 📥 Download Artifacts
+        uses: actions/download-artifact@v3
         with:
           name: nupkg
 
-      - name: Publish NuGet to GitHub Packages
-        run: dotnet nuget push "**/dotnet-todo.*.nupkg" -k ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/rprouse/index.json --skip-duplicate --no-symbols
+      - name: 🔑 Authenticate to GitHub Packages
+        run: dotnet nuget add source --username rprouse --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/rprouse/index.json"
+
+      - name: 📤 Publish NuGet to GitHub Packages
+        run: dotnet nuget push "**/dotnet-todo.*.nupkg" -k ${{ secrets.GITHUB_TOKEN }} --source "github" --skip-duplicate --no-symbols

@@ -6,13 +6,20 @@
     <RootNamespace>Alteridem.Todo.Application</RootNamespace>
     <Company>Alteridem Consulting</Company>
     <Product>Todo.txt command line utility application library</Product>
-    <Copyright>Copyright (c) 2022 Rob Prouse</Copyright>
+    <Copyright>Copyright (c) 2023 Rob Prouse</Copyright>
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
+
+  <!-- Make Internals visible to the unit tests -->
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>todo.tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ColoredConsole" Version="1.0.0" />
-    <PackageReference Include="MediatR" Version="10.0.1" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+    <PackageReference Include="MediatR" Version="12.0.1" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta3.22114.1" />
     <PackageReference Include="System.Text.Json" Version="7.0.2" />
   </ItemGroup>

@@ -6,7 +6,8 @@
     <RootNamespace>Alteridem.Todo.Infrastructure</RootNamespace>
     <Company>Alteridem Consulting</Company>
     <Product>Todo.txt command line utility infrastructure library</Product>
-    <Copyright>Copyright (c) 2022 Rob Prouse</Copyright>
+    <Copyright>Copyright (c) 2023 Rob Prouse</Copyright>
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

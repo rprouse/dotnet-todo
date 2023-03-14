@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Alteridem.Todo.Application.Commands.Archive;
+using Alteridem.Todo.Application.Commands;
 using Alteridem.Todo.Infrastructure.Persistence;
 using Alteridem.Todo.Tests.Mocks;
 using FluentAssertions;

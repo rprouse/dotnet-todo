@@ -1,11 +1,10 @@
-namespace Alteridem.Todo
+namespace Alteridem.Todo;
+
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            var app = new TodoApplication();
-            app.Run();
-        }
+        var app = new TodoApplication();
+        app.Run();
     }
 }

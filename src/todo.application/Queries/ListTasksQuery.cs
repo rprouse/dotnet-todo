@@ -6,7 +6,7 @@ using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using MediatR;
 
-namespace Alteridem.Todo.Application.Queries.List
+namespace Alteridem.Todo.Application.Queries
 {
     public sealed class ListTasksQuery : IRequest<ListTasksResponse>
     {

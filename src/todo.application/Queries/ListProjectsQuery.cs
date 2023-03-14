@@ -7,9 +7,9 @@ using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using MediatR;
 
-namespace Alteridem.Todo.Application.Queries.ListContexts
+namespace Alteridem.Todo.Application.Queries
 {
-    public class ListContextsQuery : IRequest<string[]>
+    public class ListProjectsQuery : IRequest<string[]>
     {
 
         private string[] _terms;
@@ -17,29 +17,29 @@ namespace Alteridem.Todo.Application.Queries.ListContexts
         public string[] Terms { get => _terms ?? new string[0]; set => _terms = value; }
     }
 
-    public sealed class ListContextsQueryHandler : IRequestHandler<ListContextsQuery, string[]>
+    public sealed class ListProjectsQueryHandler : IRequestHandler<ListProjectsQuery, string[]>
     {
         private readonly ITaskFile _taskFile;
         private readonly ITaskConfiguration _config;
 
-        public ListContextsQueryHandler(ITaskFile taskFile, ITaskConfiguration config)
+        public ListProjectsQueryHandler(ITaskFile taskFile, ITaskConfiguration config)
         {
             _taskFile = taskFile;
             _config = config;
         }
 
-        public Task<string[]> Handle(ListContextsQuery request, CancellationToken cancellationToken)
+        public Task<string[]> Handle(ListProjectsQuery request, CancellationToken cancellationToken)
         {
             var tasks = _taskFile.LoadTasks(_config.TodoFile);
             string[] positiveTerms = request.Terms
-                .Where(t => t.StartsWith("@"))
+                .Where(t => t.StartsWith("+"))
                 .ToArray();
             string[] negativeTerms = request.Terms
-                .Where(t => t.StartsWith("-@"))
+                .Where(t => t.StartsWith("-+"))
                 .Select(t => t.Substring(1))
                 .ToArray();
             IEnumerable<string> search = tasks
-                .SelectMany(t => t.ContextTags)
+                .SelectMany(t => t.ProjectTags)
                 .OrderBy(p => p)
                 .Distinct();
             if (positiveTerms.Length > 0)

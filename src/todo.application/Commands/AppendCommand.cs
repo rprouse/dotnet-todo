@@ -5,7 +5,7 @@ using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using MediatR;
 
-namespace Alteridem.Todo.Application.Commands.Append
+namespace Alteridem.Todo.Application.Commands
 {
     public sealed class AppendCommand : IRequest<TaskItem>
     {

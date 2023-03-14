@@ -8,7 +8,7 @@ using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using MediatR;
 
-namespace Alteridem.Todo.Application.Commands.Do
+namespace Alteridem.Todo.Application.Commands
 {
     public class DoTasksCommand : IRequest<IList<TaskItem>>
     {
@@ -33,23 +33,23 @@ namespace Alteridem.Todo.Application.Commands.Do
         {
             IList<TaskItem> completed = new List<TaskItem>();
             var tasks = _taskFile.LoadTasks(_config.TodoFile);
-            foreach(uint taskNum in request.ItemNumbers)
+            foreach (uint taskNum in request.ItemNumbers)
             {
                 var task = tasks.FirstOrDefault(t => t.LineNumber == taskNum);
-                if(task != null)
+                if (task != null)
                 {
                     task.Completed = true;
                     completed.Add(task);
                 }
             }
             _taskFile.Clear(_config.TodoFile);
-            foreach(var task in tasks.OrderBy(t => t.LineNumber))
+            foreach (var task in tasks.OrderBy(t => t.LineNumber))
             {
-                if(request.DontArchive)
+                if (request.DontArchive)
                 {
                     _taskFile.AppendTo(_config.TodoFile, task.ToString());
                 }
-                else if(!request.ItemNumbers.Contains(task.LineNumber))
+                else if (!request.ItemNumbers.Contains(task.LineNumber))
                 {
                     _taskFile.AppendTo(_config.TodoFile, task.ToString());
                 }

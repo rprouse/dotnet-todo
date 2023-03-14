@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Alteridem.Todo.Domain.Entities;
 
-namespace Alteridem.Todo.Application.Queries.List
+namespace Alteridem.Todo.Application.Queries
 {
-    public sealed class ListTasksResponse
+    public sealed class ListPriorityResponse
     {
         public IList<TaskItem> Tasks { get; set; }
 

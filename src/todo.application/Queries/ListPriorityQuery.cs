@@ -7,7 +7,7 @@ using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using MediatR;
 
-namespace Alteridem.Todo.Application.Queries.ListPriority
+namespace Alteridem.Todo.Application.Queries
 {
     public sealed class ListPriorityQuery : IRequest<ListPriorityResponse>
     {
@@ -33,13 +33,13 @@ namespace Alteridem.Todo.Application.Queries.ListPriority
         {
             char highestPriority = 'A';
             char lowestPriority = 'Z';
-            if(!string.IsNullOrWhiteSpace(request.Priorities))
+            if (!string.IsNullOrWhiteSpace(request.Priorities))
             {
-                if(request.Priorities.Length == 1 && char.IsLetter(request.Priorities[0]))
+                if (request.Priorities.Length == 1 && char.IsLetter(request.Priorities[0]))
                 {
                     highestPriority = lowestPriority = char.ToUpper(request.Priorities[0]);
                 }
-                else if(request.Priorities.Length == 3 &&
+                else if (request.Priorities.Length == 3 &&
                         char.IsLetter(request.Priorities[0]) &&
                         char.IsLetter(request.Priorities[2]))
                 {
@@ -56,8 +56,8 @@ namespace Alteridem.Todo.Application.Queries.ListPriority
 
             var tasks = _taskFile.LoadTasks(_config.TodoFile);
             IEnumerable<TaskItem> search = tasks
-                .Where(t => t.Priority.HasValue && 
-                       t.Priority >= highestPriority && 
+                .Where(t => t.Priority.HasValue &&
+                       t.Priority >= highestPriority &&
                        t.Priority <= lowestPriority);
             foreach (var term in request.Terms)
             {

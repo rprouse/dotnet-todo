@@ -1,10 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Alteridem.Todo.Application.Queries.List;
-using Alteridem.Todo.Application.Queries.ListContexts;
-using Alteridem.Todo.Domain.Common;
+using Alteridem.Todo.Application.Queries;
 using Alteridem.Todo.Infrastructure.Persistence;
 using Alteridem.Todo.Tests.Mocks;
 using FluentAssertions;

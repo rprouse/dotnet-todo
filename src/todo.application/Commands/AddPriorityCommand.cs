@@ -5,7 +5,7 @@ using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using MediatR;
 
-namespace Alteridem.Todo.Application.Commands.Priority
+namespace Alteridem.Todo.Application.Commands
 {
     public class AddPriorityCommand : IRequest<TaskItem>
     {

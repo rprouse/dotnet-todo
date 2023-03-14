@@ -9,7 +9,7 @@ using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using MediatR;
 
-namespace Alteridem.Todo.Application.Queries.IndividualTask
+namespace Alteridem.Todo.Application.Queries
 {
     public sealed class TaskQuery : IRequest<TaskItem>
     {

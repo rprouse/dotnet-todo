@@ -6,7 +6,7 @@ using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using MediatR;
 
-namespace Alteridem.Todo.Application.Commands.Deprioritize
+namespace Alteridem.Todo.Application.Commands
 {
     public sealed class DeprioritizeCommand : IRequest<IList<TaskItem>>
     {

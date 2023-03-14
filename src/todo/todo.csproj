@@ -2,18 +2,18 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>Alteridem.Todo</RootNamespace>
     <AssemblyName>todo</AssemblyName>
     <Authors>Rob Prouse</Authors>
     <Company>Alteridem Consulting</Company>
     <Product>Todo.txt command line utility</Product>
-    <Copyright>Copyright (c) 2022 Rob Prouse</Copyright>
+    <Copyright>Copyright (c) 2023 Rob Prouse</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/rprouse/dotnet-todo</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rprouse/dotnet-todo</RepositoryUrl>
     <PackageId>dotnet-todo</PackageId>
-    <Version>0.4.1</Version>
+    <Version>0.5.0</Version>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>todo</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>

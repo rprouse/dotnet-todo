@@ -6,40 +6,39 @@ using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using MediatR;
 
-namespace Alteridem.Todo.Application.Queries
+namespace Alteridem.Todo.Application.Queries;
+
+public sealed class ListTasksQuery : IRequest<ListTasksResponse>
 {
-    public sealed class ListTasksQuery : IRequest<ListTasksResponse>
+    public string Filename;
+
+    private string[] _terms;
+
+    public string[] Terms { get => _terms ?? new string[0]; set => _terms = value; }
+}
+
+public sealed class ListTasksQueryHandler : IRequestHandler<ListTasksQuery, ListTasksResponse>
+{
+    private readonly ITaskFile _taskFile;
+
+    public ListTasksQueryHandler(ITaskFile taskFile)
     {
-        public string Filename;
-
-        private string[] _terms;
-
-        public string[] Terms { get => _terms ?? new string[0]; set => _terms = value; }
+        _taskFile = taskFile;
     }
 
-    public sealed class ListTasksQueryHandler : IRequestHandler<ListTasksQuery, ListTasksResponse>
+    public Task<ListTasksResponse> Handle(ListTasksQuery request, CancellationToken cancellationToken)
     {
-        private readonly ITaskFile _taskFile;
-
-        public ListTasksQueryHandler(ITaskFile taskFile)
+        var tasks = _taskFile.LoadTasks(request.Filename);
+        IEnumerable<TaskItem> search = tasks;
+        foreach (var term in request.Terms)
         {
-            _taskFile = taskFile;
+            if (term.StartsWith("-") && term.Length > 1)
+                search = search.Where(t => !t.Description.Contains(term.Substring(1)));
+            else
+                search = search.Where(t => t.Description.Contains(term));
         }
+        search = search.OrderBy(t => t.Priority ?? '[').ThenBy(t => t.Completed);
 
-        public Task<ListTasksResponse> Handle(ListTasksQuery request, CancellationToken cancellationToken)
-        {
-            var tasks = _taskFile.LoadTasks(request.Filename);
-            IEnumerable<TaskItem> search = tasks;
-            foreach (var term in request.Terms)
-            {
-                if (term.StartsWith("-") && term.Length > 1)
-                    search = search.Where(t => !t.Description.Contains(term.Substring(1)));
-                else
-                    search = search.Where(t => t.Description.Contains(term));
-            }
-            search = search.OrderBy(t => t.Priority ?? '[').ThenBy(t => t.Completed);
-
-            return Task.FromResult(new ListTasksResponse { Tasks = search.ToList(), TotalTasks = tasks.Count });
-        }
+        return Task.FromResult(new ListTasksResponse { Tasks = search.ToList(), TotalTasks = tasks.Count });
     }
 }

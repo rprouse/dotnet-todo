@@ -5,37 +5,36 @@ using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using MediatR;
 
-namespace Alteridem.Todo.Application.Commands
+namespace Alteridem.Todo.Application.Commands;
+
+public sealed class AddTaskCommand : IRequest<TaskItem>
 {
-    public sealed class AddTaskCommand : IRequest<TaskItem>
+    public string Filename { get; set; }
+
+    public string Task { get; set; }
+
+    public bool AddCreationDate { get; set; }
+}
+
+public sealed class AddTaskCommandHandler : IRequestHandler<AddTaskCommand, TaskItem>
+{
+    private readonly ITaskFile _taskFile;
+
+    public AddTaskCommandHandler(ITaskFile taskFile)
     {
-        public string Filename { get; set; }
-
-        public string Task { get; set; }
-
-        public bool AddCreationDate { get; set; }
+        _taskFile = taskFile;
     }
 
-    public sealed class AddTaskCommandHandler : IRequestHandler<AddTaskCommand, TaskItem>
+    public Task<TaskItem> Handle(AddTaskCommand request, CancellationToken cancellationToken)
     {
-        private readonly ITaskFile _taskFile;
+        var task = new TaskItem(request.Task);
+        if (request.AddCreationDate) task.CreationDate = DateTime.Now.Date;
+        var taskStr = task.ToString();
 
-        public AddTaskCommandHandler(ITaskFile taskFile)
-        {
-            _taskFile = taskFile;
-        }
+        _taskFile.AppendTo(request.Filename, taskStr);
 
-        public Task<TaskItem> Handle(AddTaskCommand request, CancellationToken cancellationToken)
-        {
-            var task = new TaskItem(request.Task);
-            if (request.AddCreationDate) task.CreationDate = DateTime.Now.Date;
-            var taskStr = task.ToString();
+        task.LineNumber = _taskFile.LoadTasks(request.Filename).Count;
 
-            _taskFile.AppendTo(request.Filename, taskStr);
-
-            task.LineNumber = _taskFile.LoadTasks(request.Filename).Count;
-
-            return Task.FromResult(task);
-        }
+        return Task.FromResult(task);
     }
 }

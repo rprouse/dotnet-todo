@@ -1,45 +1,41 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Alteridem.Todo.Domain.Common;
-using Alteridem.Todo.Domain.Entities;
 using Alteridem.Todo.Domain.Interfaces;
 using MediatR;
 
-namespace Alteridem.Todo.Application.Commands
+namespace Alteridem.Todo.Application.Commands;
+
+public class DeleteTaskCommand : IRequest<int>
 {
-    public class DeleteTaskCommand : IRequest<int>
+    public int ItemNumber { get; set; }
+}
+
+public class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand, int>
+{
+    private readonly ITaskFile _taskFile;
+    private readonly ITaskConfiguration _config;
+
+    public DeleteTaskCommandHandler(ITaskFile taskFile, ITaskConfiguration config)
     {
-        public int ItemNumber { get; set; }
+        _taskFile = taskFile;
+        _config = config;
     }
 
-    public class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand, int>
+    public Task<int> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
     {
-        private readonly ITaskFile _taskFile;
-        private readonly ITaskConfiguration _config;
-
-        public DeleteTaskCommandHandler(ITaskFile taskFile, ITaskConfiguration config)
+        var tasks = _taskFile.LoadTasks(_config.TodoFile);
+        var delTask = tasks.FirstOrDefault(t => t.LineNumber == request.ItemNumber);
+        if (delTask is null)
         {
-            _taskFile = taskFile;
-            _config = config;
+            return Task.FromResult(0);
         }
-
-        public Task<int> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
+        tasks.Remove(delTask);
+        _taskFile.Clear(_config.TodoFile);
+        foreach (var task in tasks.OrderBy(t => t.LineNumber))
         {
-            var tasks = _taskFile.LoadTasks(_config.TodoFile);
-            var delTask = tasks.FirstOrDefault(t => t.LineNumber == request.ItemNumber);
-            if (delTask is null)
-            {
-                return Task.FromResult(0);
-            }
-            tasks.Remove(delTask);
-            _taskFile.Clear(_config.TodoFile);
-            foreach (var task in tasks.OrderBy(t => t.LineNumber))
-            {
-                _taskFile.AppendTo(_config.TodoFile, task.ToString());
-            }
-            return Task.FromResult(delTask.LineNumber);
+            _taskFile.AppendTo(_config.TodoFile, task.ToString());
         }
+        return Task.FromResult(delTask.LineNumber);
     }
 }

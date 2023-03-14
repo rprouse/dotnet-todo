@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using Alteridem.Todo.Domain.Entities;
 
-namespace Alteridem.Todo.Application.Queries
-{
-    public sealed class ListPriorityResponse
-    {
-        public IList<TaskItem> Tasks { get; set; }
+namespace Alteridem.Todo.Application.Queries;
 
-        public int TotalTasks { get; set; }
-    }
+public sealed class ListPriorityResponse
+{
+    public IList<TaskItem> Tasks { get; set; }
+
+    public int TotalTasks { get; set; }
 }

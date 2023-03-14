@@ -7,14 +7,14 @@ using MediatR;
 
 namespace Alteridem.Todo.Application.Commands;
 
-public class AddPriorityCommand : IRequest<TaskItem>
+public sealed class AddPriorityCommand : IRequest<TaskItem>
 {
     public int ItemNumber { get; set; }
 
     public char Priority { get; set; }
 }
 
-public class AddPriorityCommandHandler : IRequestHandler<AddPriorityCommand, TaskItem>
+internal sealed class AddPriorityCommandHandler : IRequestHandler<AddPriorityCommand, TaskItem>
 {
     private readonly ITaskFile _taskFile;
     private readonly ITaskConfiguration _config;

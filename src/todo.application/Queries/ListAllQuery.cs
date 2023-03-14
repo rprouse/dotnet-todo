@@ -15,7 +15,7 @@ public sealed class ListAllQuery : IRequest<ListAllResponse>
     public string[] Terms { get => _terms ?? new string[0]; set => _terms = value; }
 }
 
-public sealed class ListAllQueryHandler : IRequestHandler<ListAllQuery, ListAllResponse>
+internal sealed class ListAllQueryHandler : IRequestHandler<ListAllQuery, ListAllResponse>
 {
     private readonly ITaskFile _taskFile;
     private readonly ITaskConfiguration _config;

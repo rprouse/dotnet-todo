@@ -12,7 +12,7 @@ public sealed class TaskQuery : IRequest<TaskItem>
     public int ItemNumber { get; set; }
 }
 
-public sealed class TaskQueryHandler : IRequestHandler<TaskQuery, TaskItem>
+internal sealed class TaskQueryHandler : IRequestHandler<TaskQuery, TaskItem>
 {
     private readonly ITaskFile _taskFile;
     private readonly ITaskConfiguration _config;

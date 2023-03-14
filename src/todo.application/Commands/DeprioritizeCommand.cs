@@ -13,7 +13,7 @@ public sealed class DeprioritizeCommand : IRequest<IList<TaskItem>>
     public int[] ItemNumbers { get; set; }
 }
 
-public sealed class DeprioritizeCommandHandler : IRequestHandler<DeprioritizeCommand, IList<TaskItem>>
+internal sealed class DeprioritizeCommandHandler : IRequestHandler<DeprioritizeCommand, IList<TaskItem>>
 {
     private readonly ITaskFile _taskFile;
     private readonly ITaskConfiguration _config;

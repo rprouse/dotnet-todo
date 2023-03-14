@@ -13,7 +13,7 @@ public sealed class PrependCommand : IRequest<TaskItem>
     public string Text { get; set; }
 }
 
-public sealed class PrependCommandHandler : IRequestHandler<PrependCommand, TaskItem>
+internal sealed class PrependCommandHandler : IRequestHandler<PrependCommand, TaskItem>
 {
     private readonly ITaskFile _taskFile;
     private readonly ITaskConfiguration _config;

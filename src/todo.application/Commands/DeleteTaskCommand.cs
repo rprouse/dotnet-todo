@@ -6,12 +6,12 @@ using MediatR;
 
 namespace Alteridem.Todo.Application.Commands;
 
-public class DeleteTaskCommand : IRequest<int>
+public sealed class DeleteTaskCommand : IRequest<int>
 {
     public int ItemNumber { get; set; }
 }
 
-public class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand, int>
+internal sealed class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand, int>
 {
     private readonly ITaskFile _taskFile;
     private readonly ITaskConfiguration _config;

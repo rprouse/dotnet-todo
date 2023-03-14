@@ -13,7 +13,7 @@ public sealed class AppendCommand : IRequest<TaskItem>
     public string Text { get; set; }
 }
 
-public sealed class AppendCommandHandler : IRequestHandler<AppendCommand, TaskItem>
+internal sealed class AppendCommandHandler : IRequestHandler<AppendCommand, TaskItem>
 {
     private readonly ITaskFile _taskFile;
     private readonly ITaskConfiguration _config;

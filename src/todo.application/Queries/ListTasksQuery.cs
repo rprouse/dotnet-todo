@@ -17,7 +17,7 @@ public sealed class ListTasksQuery : IRequest<ListTasksResponse>
     public string[] Terms { get => _terms ?? new string[0]; set => _terms = value; }
 }
 
-public sealed class ListTasksQueryHandler : IRequestHandler<ListTasksQuery, ListTasksResponse>
+internal sealed class ListTasksQueryHandler : IRequestHandler<ListTasksQuery, ListTasksResponse>
 {
     private readonly ITaskFile _taskFile;
 

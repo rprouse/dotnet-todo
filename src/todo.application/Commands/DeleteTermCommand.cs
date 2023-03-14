@@ -7,14 +7,14 @@ using MediatR;
 
 namespace Alteridem.Todo.Application.Commands;
 
-public class DeleteTermCommand : IRequest<DeleteTermResult>
+public sealed class DeleteTermCommand : IRequest<DeleteTermResult>
 {
     public int ItemNumber { get; set; }
 
     public string Term { get; set; }
 }
 
-public class DeleteTermCommandHandler : IRequestHandler<DeleteTermCommand, DeleteTermResult>
+internal sealed class DeleteTermCommandHandler : IRequestHandler<DeleteTermCommand, DeleteTermResult>
 {
     private readonly ITaskFile _taskFile;
     private readonly ITaskConfiguration _config;

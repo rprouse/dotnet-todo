@@ -7,14 +7,14 @@ using MediatR;
 
 namespace Alteridem.Todo.Application.Queries;
 
-public class ListContextsQuery : IRequest<string[]>
+public sealed class ListContextsQuery : IRequest<string[]>
 {
     private string[] _terms;
 
     public string[] Terms { get => _terms ?? new string[0]; set => _terms = value; }
 }
 
-public sealed class ListContextsQueryHandler : IRequestHandler<ListContextsQuery, string[]>
+internal sealed class ListContextsQueryHandler : IRequestHandler<ListContextsQuery, string[]>
 {
     private readonly ITaskFile _taskFile;
     private readonly ITaskConfiguration _config;

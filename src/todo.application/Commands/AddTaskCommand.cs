@@ -16,7 +16,7 @@ public sealed class AddTaskCommand : IRequest<TaskItem>
     public bool AddCreationDate { get; set; }
 }
 
-public sealed class AddTaskCommandHandler : IRequestHandler<AddTaskCommand, TaskItem>
+internal sealed class AddTaskCommandHandler : IRequestHandler<AddTaskCommand, TaskItem>
 {
     private readonly ITaskFile _taskFile;
 

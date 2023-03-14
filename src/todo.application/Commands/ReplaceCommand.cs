@@ -13,7 +13,7 @@ public sealed class ReplaceCommand : IRequest<TaskItem>
     public string Text { get; set; }
 }
 
-public sealed class ReplaceCommandHandler : IRequestHandler<ReplaceCommand, TaskItem>
+internal sealed class ReplaceCommandHandler : IRequestHandler<ReplaceCommand, TaskItem>
 {
     private readonly ITaskFile _taskFile;
     private readonly ITaskConfiguration _config;

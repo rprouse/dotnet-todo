@@ -17,7 +17,7 @@ public sealed class ListPriorityQuery : IRequest<ListPriorityResponse>
     public string[] Terms { get => _terms ?? new string[0]; set => _terms = value; }
 }
 
-public sealed class ListPriorityQueryHandler : IRequestHandler<ListPriorityQuery, ListPriorityResponse>
+internal sealed class ListPriorityQueryHandler : IRequestHandler<ListPriorityQuery, ListPriorityResponse>
 {
     private readonly ITaskFile _taskFile;
     private readonly ITaskConfiguration _config;

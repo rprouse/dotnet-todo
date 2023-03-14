@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Alteridem.Todo.Application.Commands;
 
-public class DoTasksCommand : IRequest<IList<TaskItem>>
+public sealed class DoTasksCommand : IRequest<IList<TaskItem>>
 {
     private int[] _itemNumbers;
 
@@ -17,7 +17,7 @@ public class DoTasksCommand : IRequest<IList<TaskItem>>
     public bool DontArchive { get; set; }
 }
 
-public class DoTasksCommandHandler : IRequestHandler<DoTasksCommand, IList<TaskItem>>
+internal sealed class DoTasksCommandHandler : IRequestHandler<DoTasksCommand, IList<TaskItem>>
 {
     private readonly ITaskFile _taskFile;
     private readonly ITaskConfiguration _config;

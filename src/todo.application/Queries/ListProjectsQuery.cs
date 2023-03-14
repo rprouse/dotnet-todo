@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Alteridem.Todo.Application.Queries;
 
-public class ListProjectsQuery : IRequest<string[]>
+public sealed class ListProjectsQuery : IRequest<string[]>
 {
 
     private string[] _terms;
@@ -15,7 +15,7 @@ public class ListProjectsQuery : IRequest<string[]>
     public string[] Terms { get => _terms ?? new string[0]; set => _terms = value; }
 }
 
-public sealed class ListProjectsQueryHandler : IRequestHandler<ListProjectsQuery, string[]>
+internal sealed class ListProjectsQueryHandler : IRequestHandler<ListProjectsQuery, string[]>
 {
     private readonly ITaskFile _taskFile;
     private readonly ITaskConfiguration _config;

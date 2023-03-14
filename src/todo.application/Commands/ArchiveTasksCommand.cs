@@ -11,7 +11,7 @@ public sealed class ArchiveTasksCommand : IRequest<IList<TaskItem>>
 {
 }
 
-public sealed class ArchiveTasksCommandHandler : IRequestHandler<ArchiveTasksCommand, IList<TaskItem>>
+internal sealed class ArchiveTasksCommandHandler : IRequestHandler<ArchiveTasksCommand, IList<TaskItem>>
 {
     private readonly ITaskFile _taskFile;
     private readonly ITaskConfiguration _config;

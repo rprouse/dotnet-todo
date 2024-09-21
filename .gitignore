@@ -351,3 +351,6 @@ MigrationBackup/
 
 # Code coverage
 coverage.json
+
+# Sonarqube
+.sonarqube/

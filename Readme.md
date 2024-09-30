@@ -16,6 +16,10 @@ possible. As such, the [usage](#usage) below is a modified copy of the
 This program is a [dotnet tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) and requires the latest version of
 the [.NET SDK](https://dotnet.microsoft.com/download) to be installed. .NET 8.0 or newer is required.
 
+```sh
+dotnet tool install -g dotnet-todo
+```
+
 ### Enabling Tab Completion
 
 This program supports tab completion using `dotnet-suggest`. To enable, for each shell

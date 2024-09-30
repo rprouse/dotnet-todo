@@ -50,3 +50,6 @@ jobs:
 
       - name: 📤 Publish NuGet to GitHub Packages
         run: dotnet nuget push "**/dotnet-todo.*.nupkg" -k ${{ secrets.GITHUB_TOKEN }} --source "github" --skip-duplicate --no-symbols
+
+      - name: 📤 Publish NuGet to NuGet.org
+        run: dotnet nuget push "**/dotnet-todo.*.nupkg" -k ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json

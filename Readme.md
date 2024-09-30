@@ -1,5 +1,7 @@
 # Dotnet Todo.txt CLI
 
+[![Build Status](https://github.com/rprouse/dotnet-todo/actions/workflows/dotnet-core.yml/badge.svg)](https://github.com/rprouse/dotnet-todo/actions/workflows/dotnet-core.yml) ![NuGet Downloads](https://img.shields.io/nuget/dt/dotnet-todo)
+
 `dotnet-todo` is a .NET command line port of [Todo.txt](http://todotxt.org/) that tries to
 remain faithful to the command line and functionality of the original shell script wherever
 possible. As such, the [usage](#usage) below is a modified copy of the

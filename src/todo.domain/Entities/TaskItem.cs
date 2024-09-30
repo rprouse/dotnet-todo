@@ -226,25 +226,40 @@ public class TaskItem : IEquatable<TaskItem>
         string[] words = Description.Split(' ', '\t');
         foreach (string word in words)
         {
-            if(word.StartsWith("+"))
-                tokens.Add(new ColoredString($"{word} ", 
+            if (word.StartsWith('+'))
+            {
+                tokens.Add(new ColoredString($"{word} ",
                     config.ProjectColor?.Color ?? priorityColor?.Color,
                     config.ProjectColor?.BackgroundColor ?? priorityColor?.BackgroundColor));
-            else if (word.StartsWith("@"))
+            }
+            else if (word.StartsWith('@'))
+            {
                 tokens.Add(new ColoredString($"{word} ",
                     config.ContextColor?.Color ?? priorityColor?.Color,
                     config.ContextColor?.BackgroundColor ?? priorityColor?.BackgroundColor));
+            }
             else if (word.Contains(":"))
-                tokens.Add(new ColoredString($"{word} ",
-                    config.MetaColor?.Color ?? priorityColor?.Color,
-                    config.MetaColor?.BackgroundColor ?? priorityColor?.BackgroundColor));
+            {
+                if (DisplayMeta(word))
+                {
+                    tokens.Add(new ColoredString($"{word} ",
+                        config.MetaColor?.Color ?? priorityColor?.Color,
+                        config.MetaColor?.BackgroundColor ?? priorityColor?.BackgroundColor));
+                }
+            }
             else
+            {
                 tokens.Add(new ColoredString($"{word} ",
                     priorityColor?.Color,
                     priorityColor?.BackgroundColor));
+            }
         }
         return tokens.ToArray();
     }
+
+    // Do not display ID or Updated metadata
+    private static bool DisplayMeta(string meta) =>
+        !meta.ToLowerInvariant().StartsWith("id:") && !meta.ToLowerInvariant().StartsWith("updated:");
 
     public override bool Equals(object obj)
     {

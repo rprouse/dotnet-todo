@@ -199,5 +199,22 @@ namespace Alteridem.Todo.Tests.Domain.Entities
             result[pos].Color.Should().Be(ConsoleColor.DarkCyan);
             result[pos].BackgroundColor.Should().BeNull();
         }
+
+        [TestCase("id:1234 one two")]
+        [TestCase("one id:1234 two")]
+        [TestCase("one two id:1234")]
+        [TestCase("updated:1234 one two")]
+        [TestCase("one updated:1234 two")]
+        [TestCase("one two updated:1234")]
+        [TestCase("one two id:1234 updated:1234")]
+        [TestCase("one two Id:1234 Updated:1234")]
+        [TestCase("one two ID:1234 UPDATED:1234")]
+        public void DoesNotIncludeIdOrUpdatedMeta(string line)
+        {
+            var config = new TaskConfiguration();
+            var task = new TaskItem(line);
+            var result = task.ToColorString(false, config);
+            result.Should().HaveCount(2);
+        }
     }
 }

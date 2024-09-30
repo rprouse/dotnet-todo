@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://github.com/rprouse/dotnet-todo</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rprouse/dotnet-todo</RepositoryUrl>
     <PackageId>dotnet-todo</PackageId>
-    <Version>0.6.1</Version>
+    <Version>0.6.2</Version>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>todo</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>

@@ -12,7 +12,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/rprouse/dotnet-todo</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rprouse/dotnet-todo</RepositoryUrl>
-    <PackageReadmeFile>../../Readme.md</PackageReadmeFile>
+    <PackageReadmeFile>Readme.md</PackageReadmeFile>
     <PackageId>dotnet-todo</PackageId>
     <Version>0.6.2</Version>
     <PackAsTool>true</PackAsTool>

@@ -14,7 +14,7 @@
     <RepositoryUrl>https://github.com/rprouse/dotnet-todo</RepositoryUrl>
     <PackageReadmeFile>Readme.md</PackageReadmeFile>
     <PackageId>dotnet-todo</PackageId>
-    <Version>0.6.2</Version>
+    <Version>0.6.3</Version>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>todo</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>

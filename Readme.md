@@ -7,9 +7,13 @@ remain faithful to the command line and functionality of the original shell scri
 possible. As such, the [usage](#usage) below is a modified copy of the
 [original on GitHub](https://github.com/todotxt/todo.txt-cli/blob/master/USAGE.md).
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Configuration](#configuration)
+- [Dotnet Todo.txt CLI](#dotnet-todotxt-cli)
+  - [Installation](#installation)
+    - [Enabling Tab Completion](#enabling-tab-completion)
+  - [Usage](#usage)
+    - [Commands](#commands)
+    - [Warning](#warning)
+  - [Configuration](#configuration)
 
 ## Installation
 
@@ -40,6 +44,27 @@ For a complete list of options,
 ```sh
 todo --help
 ```
+
+### Commands
+
+- **add**: Adds a task to your todo.txt file.
+- **addm**: Adds multiple tasks to your todo.txt file.
+- **addto**: Adds a line of text to any file located in the todo.txt directory.
+- **append**: Adds text to the end of a task.
+- **archive**: Moves all done tasks from todo.txt to done.txt and removes blank lines.
+- **delete**: Deletes a task or a term from a task.
+- **depri**: Deprioritizes (removes the priority) from tasks.
+- **edit**: Opens the folder containing the todo.txt file in VS Code.
+- **do**: Marks tasks as done in todo.txt.
+- **list**: Displays tasks that match terms sorted by priority.
+- **listall**: Displays all tasks in todo.txt and done.txt that match terms.
+- **listcon**: Lists all task contexts starting with @.
+- **listfile**: Displays tasks from a specific file that match terms.
+- **listpri**: Displays prioritized tasks that match terms.
+- **listproj**: Lists all projects starting with +.
+- **prepend**: Adds text to the beginning of a task.
+- **pri**: Adds or updates the priority of a task.
+- **replace**: Replaces a task with updated text.
 
 ### Warning
 

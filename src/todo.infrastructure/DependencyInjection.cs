@@ -23,7 +23,7 @@ public static class DependencyInjection
                     var options = new JsonSerializerOptions
                     {
                         AllowTrailingCommas = true,
-                        IgnoreNullValues = true,
+                        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                         ReadCommentHandling = JsonCommentHandling.Skip,
                         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                         WriteIndented = true

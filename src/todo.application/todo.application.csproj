@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>Todo.Application</AssemblyName>
     <RootNamespace>Alteridem.Todo.Application</RootNamespace>
     <Company>Alteridem Consulting</Company>
     <Product>Todo.txt command line utility application library</Product>
-    <Copyright>Copyright (c) 2023 Rob Prouse</Copyright>
-    <LangVersion>10</LangVersion>
+    <Copyright>Copyright (c) 2025 Rob Prouse</Copyright>
+    <LangVersion>12</LangVersion>
   </PropertyGroup>
 
   <!-- Make Internals visible to the unit tests -->

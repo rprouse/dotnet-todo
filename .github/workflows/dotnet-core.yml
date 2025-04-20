@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - name: 📥 Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 💉 Install dependencies
       run: dotnet restore
@@ -28,7 +28,7 @@ jobs:
       run: dotnet pack --no-build --configuration Release src/todo/todo.csproj
 
     - name: 📤 Upload Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: nupkg
         path: src/todo/nupkg/*.nupkg
@@ -41,7 +41,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - name: 📥 Download Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: nupkg
 

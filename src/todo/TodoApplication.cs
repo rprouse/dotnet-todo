@@ -307,8 +307,9 @@ public class TodoApplication
 
     private async Task Edit()
     {
-        // TODO: Implement logic to open the folder containing the todo.txt file in VS Code
-        Console.WriteLine("Opening folder in VS Code...");
+        Console.WriteLine("Opening todo.txt in VS Code...");
+        var command = new EditTodoCommand();
+        await Mediator.Send(command);
     }
 
     private RootCommand CreateCommands()

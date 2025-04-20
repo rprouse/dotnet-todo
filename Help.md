@@ -77,6 +77,13 @@ Marks task(s) on line ITEM# as done in todo.txt.
 todo do ITEM#[, ITEM#, ITEM#, ...]
 ```
 
+### `edit`
+Opens the folder containing the todo.txt file in VS Code.
+
+```shell
+todo edit
+```
+
 ### `help`
 Display help about usage, options, built-in and add-on actions, or just the usage
 help for the passed ACTION(s).

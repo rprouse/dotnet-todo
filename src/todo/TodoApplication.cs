@@ -305,6 +305,12 @@ public class TodoApplication
         }
     }
 
+    private async Task Edit()
+    {
+        // TODO: Implement logic to open the folder containing the todo.txt file in VS Code
+        Console.WriteLine("Opening folder in VS Code...");
+    }
+
     private RootCommand CreateCommands()
     {
         var add = new Command("add", "Adds THING I NEED TO DO to your todo.txt file on its own line.");
@@ -367,6 +373,13 @@ public class TodoApplication
         {
             Configure(d);
             await Deprioritize(items);
+        });
+
+        var edit = new Command("edit", "Opens the folder containing the todo.txt file in VS Code.");
+        edit.Handler = CommandHandler.Create(async (string d) =>
+        {
+            Configure(d);
+            await Edit();
         });
 
         var @do = new Command("do", "Marks task(s) on line ITEM# as done in todo.txt.");
@@ -471,6 +484,7 @@ public class TodoApplication
             archive,
             delete,
             depri,
+            edit,
             @do,
             list,
             listall,
